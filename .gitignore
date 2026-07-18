@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+.env
+
+# Node / dashboard
+node_modules/
+dashboard/dist/
+dashboard/public/jobs.json
+
+# Note: data/jobs.db and data/jobs.json ARE committed (updated by the workflow)
