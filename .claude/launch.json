@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dashboard",
+      "runtimeExecutable": "cmd.exe",
+      "runtimeArgs": [
+        "/c",
+        "set PATH=C:\\Program Files\\nodejs;%PATH% && cd dashboard && node_modules\\.bin\\vite.cmd --port 5173 --strictPort"
+      ],
+      "port": 5173
+    }
+  ]
+}

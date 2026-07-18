@@ -1,0 +1,52 @@
+name: Job Radar (daily)
+
+on:
+  schedule:
+    - cron: "30 2 * * *" # 8:00 AM IST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: job-radar
+  cancel-in-progress: false
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Run radar
+        env:
+          RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
+          # Optional override of the daily query budget (default 6/day,
+          # ~180/month — inside the JSearch free tier of ~200/month).
+          MAX_API_CALLS: ${{ vars.MAX_API_CALLS }}
+        run: python src/radar.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name "job-radar-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/jobs.db data/jobs.json
+          if git diff --cached --quiet; then
+            echo "No data changes to commit"
+          else
+            git commit -m "chore: radar run $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
