@@ -1,0 +1,10 @@
+# Netlify build config for the dashboard.
+# The site auto-rebuilds whenever the daily radar workflow commits fresh
+# data/jobs.json to main (the prebuild script copies it into the bundle).
+[build]
+  base = "dashboard"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
