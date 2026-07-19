@@ -8,8 +8,10 @@ everything to JSON for the dashboard.
 Modules (sections below): fetch, score, dedupe/store, export.
 
 Env vars:
-    RAPIDAPI_KEY   - RapidAPI key for the JSearch API (required to fetch)
-    MAX_API_CALLS  - optional override of the daily query budget
+    RAPIDAPI_KEY       - RapidAPI key for the JSearch API (required to fetch)
+    APIFY_TOKEN        - Apify token for the Naukri scraper (optional)
+    MAX_API_CALLS      - optional override of the daily JSearch query budget
+    MAX_NAUKRI_RESULTS - optional override of listings per Naukri run
 """
 
 from __future__ import annotations
@@ -318,6 +320,136 @@ def normalize(item: dict) -> dict | None:
 
 
 # ---------------------------------------------------------------------------
+# Fetch (Naukri via Apify actor)
+# ---------------------------------------------------------------------------
+
+# Naukri doesn't feed Google's jobs index, so JSearch barely covers it.
+# The blackfalcondata/naukri-jobs-feed Apify actor scrapes it directly:
+# ~$0.0015/listing on Apify's free tier ($5 free credits/month), so the
+# default 60 listings/day costs ~$2.70/month.
+APIFY_RUN_URL = (
+    "https://api.apify.com/v2/acts/"
+    "blackfalcondata~naukri-jobs-feed/run-sync-get-dataset-items"
+)
+
+NAUKRI_QUERIES = ["devops engineer", "gcp devops", "platform engineer", "sre"]
+NAUKRI_MAX_RESULTS = 60
+
+_TARGET_LOCATION_RE = re.compile(
+    r"pune|hyderabad|bangalore|bengaluru|remote|work from home|hybrid", re.I
+)
+
+
+def fetch_naukri(apify_token: str) -> list[dict]:
+    """Run the Naukri scraper actor and return its raw listings."""
+    payload = {
+        "searchQueries": NAUKRI_QUERIES,
+        "experience": "0-8",
+        "freshness": 7,
+        "sortBy": "date",
+        "maxResults": int(os.environ.get("MAX_NAUKRI_RESULTS") or NAUKRI_MAX_RESULTS),
+        "compact": True,
+    }
+    try:
+        resp = requests.post(
+            APIFY_RUN_URL,
+            params={"token": apify_token},
+            json=payload,
+            timeout=320,
+        )
+        resp.raise_for_status()
+        items = resp.json()
+        if not isinstance(items, list):
+            log.warning("Unexpected Apify response shape: %s", type(items).__name__)
+            return []
+        log.info("Naukri: %d raw listings", len(items))
+        return items
+    except (requests.RequestException, ValueError) as exc:
+        log.warning("Naukri fetch failed: %s", exc)
+        return []
+
+
+def _flat_text(value) -> str:
+    """Best-effort flatten of a possibly nested API value into a string."""
+    if value is None:
+        return ""
+    if isinstance(value, str):
+        return value
+    if isinstance(value, (int, float)):
+        return str(value)
+    if isinstance(value, dict):
+        for key in ("name", "label", "title", "text", "value"):
+            if value.get(key):
+                return _flat_text(value[key])
+        return " ".join(_flat_text(v) for v in value.values() if v)
+    if isinstance(value, list):
+        return ", ".join(_flat_text(v) for v in value if v)
+    return str(value)
+
+
+def _parse_naukri_date(value) -> str:
+    """Epoch millis/seconds or ISO string -> UTC ISO; falls back to now."""
+    if isinstance(value, (int, float)) and value > 0:
+        ts = value / 1000 if value > 1e12 else value
+        try:
+            return datetime.fromtimestamp(ts, tz=timezone.utc).isoformat()
+        except (OverflowError, OSError, ValueError):
+            pass
+    if isinstance(value, str) and value:
+        try:
+            dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt.astimezone(timezone.utc).isoformat()
+        except ValueError:
+            pass
+    return datetime.now(timezone.utc).isoformat()
+
+
+def normalize_naukri(item: dict) -> dict | None:
+    """Map a raw Naukri listing onto the jobs schema.
+
+    Returns None for unusable items and for jobs outside the target
+    locations (Pune / Hyderabad / Bangalore / Remote).
+    """
+    title = _flat_text(item.get("title") or item.get("jobTitle")).strip()
+    url = _flat_text(
+        item.get("portalUrl") or item.get("jdURL") or item.get("url")
+    ).strip()
+    if not title or not url:
+        return None
+
+    location = _flat_text(item.get("location") or item.get("placeholders")).strip()
+    if not _TARGET_LOCATION_RE.search(location):
+        return None
+
+    company = _flat_text(item.get("company") or item.get("companyName")).strip()
+    description = _flat_text(item.get("description"))
+    skills_raw = _flat_text(item.get("skills") or item.get("tags"))
+    exp_raw = _flat_text(item.get("experience"))
+    text = f"{title} {description} {skills_raw} {exp_raw}"
+
+    job_id = _flat_text(item.get("jobId") or item.get("id")).strip()
+    if not job_id:
+        job_id = hashlib.sha1(url.encode()).hexdigest()[:16]
+
+    return {
+        "id": f"nk-{job_id}",
+        "title": title,
+        "company": company,
+        "location": location,
+        "url": url,
+        "source": "Naukri",
+        "posted_at": _parse_naukri_date(item.get("createdDate")),
+        "score": score_job(title, f"{description} {skills_raw} {exp_raw}"),
+        "cloud_tags": tag_cloud(text),
+        "skills": ",".join(extract_skills(text)),
+        "experience": experience_label(extract_experience(text)),
+        "status": "new",
+    }
+
+
+# ---------------------------------------------------------------------------
 # Dedupe / store (SQLite)
 # ---------------------------------------------------------------------------
 
@@ -440,23 +572,34 @@ def export_json(conn: sqlite3.Connection) -> int:
 def main() -> int:
     load_dotenv()
     api_key = os.environ.get("RAPIDAPI_KEY")
+    apify_token = os.environ.get("APIFY_TOKEN")
     conn = open_db()
 
-    inserted: list[dict] = []
+    normalized: list[dict] = []
+    seen_urls: set[str] = set()
+
+    def collect(job: dict | None) -> None:
+        if job and job["url"] not in seen_urls:
+            seen_urls.add(job["url"])
+            normalized.append(job)
+
     if api_key:
         raw = fetch_jobs(api_key, conn)
-        log.info("Fetched %d raw results", len(raw))
-        normalized: list[dict] = []
-        seen_urls: set[str] = set()
+        log.info("JSearch: fetched %d raw results", len(raw))
         for item in raw:
-            job = normalize(item)
-            if job and job["url"] not in seen_urls:
-                seen_urls.add(job["url"])
-                normalized.append(job)
+            collect(normalize(item))
+    else:
+        log.warning("RAPIDAPI_KEY not set; skipping JSearch fetch")
+
+    if apify_token:
+        for item in fetch_naukri(apify_token):
+            collect(normalize_naukri(item))
+    else:
+        log.info("APIFY_TOKEN not set; skipping Naukri fetch")
+
+    if normalized:
         inserted = insert_new_jobs(conn, normalized)
         log.info("Inserted %d new jobs (deduped from %d)", len(inserted), len(normalized))
-    else:
-        log.warning("RAPIDAPI_KEY not set; skipping fetch (export only)")
 
     total = export_json(conn)
     log.info("Exported %d jobs to %s", total, JSON_PATH)

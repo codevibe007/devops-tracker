@@ -34,6 +34,8 @@ jobs:
       - name: Run radar
         env:
           RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
+          # Optional: enables the Naukri source via the Apify scraper actor
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
           # Optional override of the daily query budget (default 6/day,
           # ~180/month — inside the JSearch free tier of ~200/month).
           MAX_API_CALLS: ${{ vars.MAX_API_CALLS }}
