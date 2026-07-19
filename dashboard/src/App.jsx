@@ -11,10 +11,26 @@ const LOCATION_PILLS = ["Pune", "Hyderabad", "Bangalore", "Remote"];
 
 const STATUS_KEY = "radar-status-overrides";
 const THEME_KEY = "radar-theme";
+const OWNER_KEY = "radar-owner";
 
 // GitHub Actions page where the radar workflow can be triggered manually.
 const RUN_WORKFLOW_URL =
   "https://github.com/codevibe007/devops-tracker/actions/workflows/radar.yml";
+
+// Owner mode: visiting the site once with #owner marks this browser as the
+// owner and reveals the run-workflow shortcut (#guest clears it). Cosmetic
+// only — actually running the workflow requires GitHub write access.
+function resolveOwner() {
+  if (window.location.hash === "#owner") {
+    localStorage.setItem(OWNER_KEY, "1");
+    return true;
+  }
+  if (window.location.hash === "#guest") {
+    localStorage.removeItem(OWNER_KEY);
+    return false;
+  }
+  return localStorage.getItem(OWNER_KEY) === "1";
+}
 
 function loadOverrides() {
   try {
@@ -168,6 +184,13 @@ export default function App() {
     document.documentElement.classList.contains("dark")
   );
   const [refreshing, setRefreshing] = useState(false);
+  const [isOwner, setIsOwner] = useState(resolveOwner);
+
+  useEffect(() => {
+    const onHash = () => setIsOwner(resolveOwner());
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
 
   const loadData = () => {
     setRefreshing(true);
@@ -246,15 +269,17 @@ export default function App() {
           >
             {refreshing ? "⏳ Refreshing…" : "🔄 Refresh"}
           </button>
-          <a
-            href={RUN_WORKFLOW_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-700"
-            title="Open GitHub Actions to trigger a fresh fetch"
-          >
-            ▶ Run radar now ↗
-          </a>
+          {isOwner && (
+            <a
+              href={RUN_WORKFLOW_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-700"
+              title="Open GitHub Actions to trigger a fresh fetch"
+            >
+              ▶ Run radar now ↗
+            </a>
+          )}
           <button
             onClick={() => setDark((d) => !d)}
             className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-700"
