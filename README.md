@@ -129,7 +129,8 @@ npm run dev                     # auto-copies ../data/jobs.json into public/
 - Light/dark mode with a toggle (defaults to your system preference).
 - **Refresh** button (re-reads the latest data) and **Run radar now ↗**
   link that opens the GitHub Actions page to trigger a fresh fetch.
-- **Owner mode** — the Run radar button is hidden for visitors. Open the
-  site once as `https://<your-site>/#owner` to reveal it on your browser
-  (remembered in localStorage); `#guest` hides it again. This is cosmetic:
-  actually running the workflow always requires GitHub write access.
+- **Owner mode** — the Run radar button is hidden by default and visible
+  only while the URL carries the `#owner` hash: bookmark
+  `https://<your-site>/#owner` and use that link yourself. Removing the
+  hash hides the button again. This is cosmetic: actually running the
+  workflow always requires GitHub write access.
