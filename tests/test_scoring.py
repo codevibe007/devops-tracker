@@ -143,6 +143,18 @@ class TestQueryRotation:
     def test_monthly_quota_within_free_tier(self):
         assert radar.DAILY_BUDGET * 31 <= 200
 
+    def test_full_sweep_fits_inside_search_window(self):
+        # Every combo must be re-queried at least once per 7-day search
+        # window, or postings could fall through between visits.
+        import math
+
+        total = len(radar.ROLES) * len(radar.LOCATIONS)
+        sweep_days = math.ceil(total / radar.DAILY_BUDGET)
+        assert sweep_days <= 7, (
+            f"{total} combos at {radar.DAILY_BUDGET}/day = {sweep_days}-day "
+            "sweep, exceeding the 7-day search window"
+        )
+
 
 class TestNormalizeNaukri:
     def _item(self, **overrides):
