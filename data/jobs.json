@@ -1,7 +1,826 @@
 {
-  "last_run": "2026-07-19T15:20:10.869730+00:00",
-  "total": 241,
+  "last_run": "2026-07-19T15:28:57.613534+00:00",
+  "total": 280,
   "jobs": [
+    {
+      "id": "KxSNppjcfJ45hkW3AAAAAA==",
+      "title": "Senior Site Reliability Engineer (SRE)",
+      "company": "Sleek",
+      "location": "Remote",
+      "url": "https://in.indeed.com/viewjob?jk=9ddd09828a423c51",
+      "source": "Indeed",
+      "posted_at": "2026-07-01T00:00:00.000Z",
+      "score": 9.0,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "ArgoCD",
+        "Python",
+        "Prometheus"
+      ],
+      "experience": "6+ yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "KYIqt7w7Ci7UVkNJAAAAAA==",
+      "title": "IN_Senior Associate_SRE_GCC_Advisory_Hyderabad",
+      "company": "PWC",
+      "location": "India",
+      "url": "https://getmereferred.com/in/job-listing/insenior-associatesregccadvisoryhyderabad-pwc-intshyderabad-4-to-7-years-experience-f2a413a3-d13b-4945-85d8-8ff29a3a6cc1",
+      "source": "Getmereferred.com",
+      "posted_at": "2026-07-14T00:00:00.000Z",
+      "score": 8.0,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "Python",
+        "Prometheus"
+      ],
+      "experience": "4-7 yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "9ua2CfbXgMLIdhFdAAAAAA==",
+      "title": "Zeotap is Hiring Infrastructure / SRE Intern",
+      "company": "Fresher Door",
+      "location": "India",
+      "url": "https://in.linkedin.com/jobs/view/zeotap-is-hiring-infrastructure-sre-intern-at-fresher-door-4441197130",
+      "source": "LinkedIn",
+      "posted_at": "2026-07-17T00:00:00.000Z",
+      "score": 8.0,
+      "cloud_tags": "gcp,aws",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "Helm",
+        "Python",
+        "Prometheus"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "e_Zc1FGGXTMUmBmzAAAAAA==",
+      "title": "Senior Site Reliability Engineer",
+      "company": "FNZ",
+      "location": "Pimpri-Chinchwad, Maharashtra",
+      "url": "https://in.linkedin.com/jobs/view/senior-site-reliability-engineer-at-fnz-4413114163",
+      "source": "LinkedIn",
+      "posted_at": "2026-06-23T00:00:00.000Z",
+      "score": 7.5,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "CI/CD"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "f8UsX_6k4kdXpiNvAAAAAA==",
+      "title": "Sr Engineer, Systems Reliability - SRE [T500-27452]",
+      "company": "TMUS Global Solutions",
+      "location": "India",
+      "url": "https://in.linkedin.com/jobs/view/sr-engineer-systems-reliability-sre-t500-27452-at-tmus-global-solutions-4438203724",
+      "source": "LinkedIn",
+      "posted_at": "2026-07-08T00:00:00.000Z",
+      "score": 7.5,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Terraform",
+        "GitHub Actions",
+        "Jenkins",
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "6-10 yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "ZgV3WvarxOyZlM7fAAAAAA==",
+      "title": "EY - Senior Manager - AI Site Reliability Engineering",
+      "company": "EY",
+      "location": "India",
+      "url": "https://www.hirist.tech/j/ey-senior-manager-ai-site-reliability-engineering-1654353",
+      "source": "Hirist",
+      "posted_at": "2026-07-13T00:00:00.000Z",
+      "score": 7.0,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "ArgoCD",
+        "GitHub Actions"
+      ],
+      "experience": "12+ yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "8t83X3T6cgMF3h_rAAAAAA==",
+      "title": "PinnacleU is Hiring Site Reliability Engineer",
+      "company": "Fresher Door",
+      "location": "India",
+      "url": "https://in.linkedin.com/jobs/view/pinnacleu-is-hiring-site-reliability-engineer-at-fresher-door-4441199103",
+      "source": "LinkedIn",
+      "posted_at": "2026-07-17T00:00:00.000Z",
+      "score": 7.0,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "Helm",
+        "Jenkins"
+      ],
+      "experience": "1-3 yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "GMbhkiwsTOoqTaXAAAAAAA==",
+      "title": "SRE (Remote)",
+      "company": "Hire Feed",
+      "location": "Remote",
+      "url": "https://bebee.com/in/jobs/sre-remote-hire-feed--theirstack-742928987",
+      "source": "BeBee",
+      "posted_at": "2026-06-27T00:00:00.000Z",
+      "score": 7.0,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "Python",
+        "Prometheus"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "d3z0Kxzz8Yt9kSs9AAAAAA==",
+      "title": "Senior Cloud Site Reliability Engineer",
+      "company": "Solace",
+      "location": "Remote",
+      "url": "https://www.remoterocketship.com/company/solace/jobs/senior-cloud-site-reliability-engineer-india-remote/",
+      "source": "Remote Rocketship",
+      "posted_at": "2026-06-24T00:00:00.000Z",
+      "score": 7.0,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "Python",
+        "Prometheus"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "7FIp6CLDj9KY-1O4AAAAAA==",
+      "title": "Site Reliability Engineer (SRE) at Avyka",
+      "company": "InOrg Global",
+      "location": "Remote",
+      "url": "https://jobgether.com/offer/6a3ec5532da8cde35c769346-site-reliability-engineer-sre-at-avyka",
+      "source": "Jobgether",
+      "posted_at": "2026-06-26T00:00:00.000Z",
+      "score": 7.0,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Kubernetes",
+        "Docker",
+        "GitLab CI",
+        "Ansible",
+        "Python"
+      ],
+      "experience": "3+ yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "DggFL5C_nEBT94sQAAAAAA==",
+      "title": "Staff Site Reliability Engineer, Application SRE (Pune)",
+      "company": "NetSkope Software",
+      "location": "Pune, Maharashtra",
+      "url": "https://www.shine.com/jobs/staff-site-reliability-engineer-application-sre-pune/netskope-software/19190505",
+      "source": "Shine",
+      "posted_at": "2026-06-30T00:00:00.000Z",
+      "score": 6.0,
+      "cloud_tags": "gcp",
+      "skills": [
+        "GCP",
+        "Kubernetes",
+        "Docker",
+        "Jenkins",
+        "Ansible",
+        "Python"
+      ],
+      "experience": "5+ yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "paVPqWnYj3HMgUPeAAAAAA==",
+      "title": "SRE / OPS -GenAI",
+      "company": "Tata Consultancy Services",
+      "location": "India",
+      "url": "https://in.linkedin.com/jobs/view/sre-ops-genai-at-tata-consultancy-services-4441618201",
+      "source": "LinkedIn",
+      "posted_at": "2026-07-16T00:00:00.000Z",
+      "score": 6.0,
+      "cloud_tags": "gcp,aws",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Kubernetes",
+        "Docker",
+        "Python",
+        "Prometheus",
+        "Grafana"
+      ],
+      "experience": "6-10 yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "3oTbh_qr4WbYx-WdAAAAAA==",
+      "title": "SRE Engineer",
+      "company": "Red Hat India Private Limited",
+      "location": "Remote",
+      "url": "https://redhat.wd5.myworkdayjobs.com/en-US/Jobs/job/SRE-Engineer_R-057237-1",
+      "source": "Workday",
+      "posted_at": "2026-07-14T00:00:00.000Z",
+      "score": 6.0,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Kubernetes",
+        "Jenkins",
+        "Ansible",
+        "Python"
+      ],
+      "experience": "4+ yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "MFMWXvIDDpcw-d50AAAAAA==",
+      "title": "Manager, Site Reliability Engineering-Hybrid",
+      "company": "Bentley Systems",
+      "location": "Pune, Maharashtra",
+      "url": "https://in.jooble.org/rjdp/-2459680437517438846",
+      "source": "Jooble",
+      "posted_at": "2026-07-15T00:00:00.000Z",
+      "score": 5.5,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Kubernetes",
+        "CI/CD"
+      ],
+      "experience": "8+ yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "9qvgu0_8MOo-988wAAAAAA==",
+      "title": "Senior SRE Engineer (Observability Focus)",
+      "company": "capital.com",
+      "location": "Remote",
+      "url": "https://remote.com/jobs/capital-com-c1c6sx6g/senior-sre-engineer-observability-focus-j12de3cy",
+      "source": "Remote",
+      "posted_at": "2026-06-19T00:00:00.000Z",
+      "score": 5.0,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS",
+        "Terraform",
+        "Kubernetes",
+        "Helm",
+        "ArgoCD",
+        "Ansible",
+        "Python",
+        "Prometheus"
+      ],
+      "experience": "6+ yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "XGctmFIOoAjdfztfAAAAAA==",
+      "title": "Sre Ii (Telangana)",
+      "company": "Ivy",
+      "location": "India",
+      "url": "https://www.shine.com/jobs/sre-ii-telangana/ivy/19222168",
+      "source": "Shine",
+      "posted_at": "2026-07-17T00:00:00.000Z",
+      "score": 4.5,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS",
+        "Terraform",
+        "Kubernetes",
+        "ArgoCD",
+        "GitHub Actions",
+        "Jenkins",
+        "Ansible",
+        "Prometheus"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "dOBu06xzOLhvRNxGAAAAAA==",
+      "title": "Vice President - Site Reliability Engineer (AWS & Kubernetes)",
+      "company": "NatWest Group",
+      "location": "India",
+      "url": "https://apna.co/job/bengaluru/site-reliability-engineer-aws-kubernetes-vp-1412854941",
+      "source": "Apna Jobs",
+      "posted_at": "2026-07-19T00:00:00.000Z",
+      "score": 4.5,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS",
+        "Terraform",
+        "Kubernetes",
+        "ArgoCD",
+        "GitLab CI",
+        "Prometheus",
+        "Grafana",
+        "CI/CD"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "d2dbaGFnRp9UxXEXAAAAAA==",
+      "title": "Site Reliability Manager",
+      "company": "Google India",
+      "location": "India",
+      "url": "https://www.foundit.in/job/site-reliability-manager-google-india-bengaluru-bangalore-59183274",
+      "source": "Foundit",
+      "posted_at": "2026-07-15T00:00:00.000Z",
+      "score": 4.5,
+      "cloud_tags": "gcp",
+      "skills": [
+        "GCP",
+        "Kubernetes"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "rUNclcnvlPM1Yj3yAAAAAA==",
+      "title": "AI infrastructure Engineer (SRE) Bangalore",
+      "company": "Together AI",
+      "location": "Remote",
+      "url": "https://in.indeed.com/viewjob?jk=17550654b18b86ef",
+      "source": "Indeed",
+      "posted_at": "2026-07-13T00:00:00.000Z",
+      "score": 4.5,
+      "cloud_tags": "none",
+      "skills": [
+        "Terraform",
+        "Kubernetes",
+        "Ansible"
+      ],
+      "experience": "7+ yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "0-bkXgX14XefBrTSAAAAAA==",
+      "title": "SRE Cloud Reliability Engineer",
+      "company": "Ashra Technology",
+      "location": "India",
+      "url": "https://www.simplyhired.co.in/job/L1PoZ4WtfHEDfkapz8lg3pLavOwQyxLm9aW9y4731afsVikppmfe5Q",
+      "source": "SimplyHired",
+      "posted_at": "2026-07-15T00:00:00.000Z",
+      "score": 4.0,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "Helm",
+        "Python",
+        "Prometheus",
+        "Grafana"
+      ],
+      "experience": "5-7 yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "YUeWsrA9Jel74A0cAAAAAA==",
+      "title": "Senior Site Reliability Engineer",
+      "company": "Mastercard",
+      "location": "Pune, Maharashtra",
+      "url": "https://careers.mastercard.com/us/en/job/R-273052/Senior-Site-Reliability-Engineer",
+      "source": "Mastercard",
+      "posted_at": "2026-06-29T00:00:00.000Z",
+      "score": 3.5,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "a4hMTGs9DNN7Vr9VAAAAAA==",
+      "title": "Lead Site Reliability Engineer",
+      "company": "Mastercard",
+      "location": "Pune, Maharashtra",
+      "url": "https://careers.mastercard.com/us/en/job/R-272983/Lead-Site-Reliability-Engineer",
+      "source": "Mastercard",
+      "posted_at": "2026-06-28T00:00:00.000Z",
+      "score": 3.5,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "yyfFsfMDnchJ9StnAAAAAA==",
+      "title": "Hiring SRE - Hybrid - Hyderabad - SS&C",
+      "company": "SS&C Technologies",
+      "location": "India",
+      "url": "https://bebee.com/in/jobs/hiring-sre-hybrid-hyderabad-ssc-ssc-technologies-hyderabad--t7xk-767807282",
+      "source": "BeBee",
+      "posted_at": "2026-07-19T00:00:00.000Z",
+      "score": 3.5,
+      "cloud_tags": "aws,azure",
+      "skills": [
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "Ansible",
+        "Prometheus",
+        "Grafana"
+      ],
+      "experience": "3+ yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "rf0kX_7herDUrAv2AAAAAA==",
+      "title": "Senior Site Reliability Engineer",
+      "company": "IND002 Thomson Reuters International Services Private Limited",
+      "location": "Remote",
+      "url": "https://thomsonreuters.wd5.myworkdayjobs.com/en-US/External_Career_Site/job/Senior-Site-Reliability-Engineer_JREQ200783-1",
+      "source": "Workday",
+      "posted_at": "2026-07-13T00:00:00.000Z",
+      "score": 3.0,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS",
+        "Terraform",
+        "GitHub Actions",
+        "CI/CD"
+      ],
+      "experience": "6-10 yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "EciX6fiVW3xf9jy_AAAAAA==",
+      "title": "Apple Off Campus Drive 2026 | Hiring DevOps Engineer Fresher Apple | Hyderabad",
+      "company": "Fresher Door",
+      "location": "Hyderabad, Telangana",
+      "url": "https://bebee.com/in/jobs/apple-off-campus-drive-2026-hiring-devops-engineer-fresher-apple-hyderabad-fresher-door-hyderabad-te--t7xk-768089983",
+      "source": "BeBee",
+      "posted_at": "2026-07-17T00:00:00.000Z",
+      "score": 3.0,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "Ansible",
+        "Python",
+        "Prometheus",
+        "Grafana"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "nk-220822501193",
+      "title": "DevOps Engineer",
+      "company": "Busigence Technologies",
+      "location": "Remote",
+      "url": "https://www.naukri.com/job-listings-devops-engineer-busigence-technologies-remote-0-to-2-years-220822501193",
+      "source": "Naukri",
+      "posted_at": "2022-08-22T12:56:17+00:00",
+      "score": 3.0,
+      "cloud_tags": "gcp,aws",
+      "skills": [
+        "GCP",
+        "AWS"
+      ],
+      "experience": "0-2 yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "F-NFs1LcIwvYtH9qAAAAAA==",
+      "title": "SRE - Incidents & Monitoring - cialdnb",
+      "company": "OpenTalent",
+      "location": "Remote",
+      "url": "https://www.opentalent.in/jobs/sre-incidents-and-monitoring-cialdnb",
+      "source": "OpenTalent",
+      "posted_at": "2026-07-15T00:00:00.000Z",
+      "score": 2.5,
+      "cloud_tags": "none",
+      "skills": [
+        "Kubernetes",
+        "Prometheus",
+        "Grafana"
+      ],
+      "experience": "3+ yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "ek01L6hnL6rLw0ZsAAAAAA==",
+      "title": "Dev Ops or Cloud Engineer",
+      "company": "Workday",
+      "location": "Pimpri-Chinchwad, Maharashtra",
+      "url": "https://in.linkedin.com/jobs/view/dev-ops-or-cloud-engineer-at-workday-4439663478",
+      "source": "LinkedIn",
+      "posted_at": "2026-07-19T07:00:00.000Z",
+      "score": 2.5,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS",
+        "Terraform",
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "5+ yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "zOoe1ByHDJWdQ7bXAAAAAA==",
+      "title": "Synopsys looking for Entry level Hiring Site Reliability Associate",
+      "company": "Fresher Door",
+      "location": "India",
+      "url": "https://in.linkedin.com/jobs/view/synopsys-looking-for-entry-level-hiring-site-reliability-associate-at-fresher-door-4441196037",
+      "source": "LinkedIn",
+      "posted_at": "2026-07-17T00:00:00.000Z",
+      "score": 2.0,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS",
+        "Kubernetes",
+        "Ansible",
+        "Python"
+      ],
+      "experience": "2+ yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "iCty2BtyARxwPrL8AAAAAA==",
+      "title": "Application SRE AI Solutions Engineer",
+      "company": "PepsiCo",
+      "location": "India",
+      "url": "https://www.pepsicojobs.com/main/jobs/446889?lang=en-us",
+      "source": "PepsiCo Careers",
+      "posted_at": "2026-06-25T00:00:00.000Z",
+      "score": 1.5,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Python"
+      ],
+      "experience": "12+ yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "xsB3K-NDsHmWpiVGAAAAAA==",
+      "title": "Senior Engineer (DevOps, SRE, or Cloud) \u2014 Remote",
+      "company": "Hire Feed",
+      "location": "Remote",
+      "url": "https://bebee.com/in/jobs/senior-engineer-devops-sre-or-cloud-remote-hire-feed--t7xk-759294179",
+      "source": "BeBee",
+      "posted_at": "2026-07-12T00:00:00.000Z",
+      "score": 1.5,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS",
+        "Terraform",
+        "Ansible",
+        "Python"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "owAamL-JyjxkMwDnAAAAAA==",
+      "title": "SRE Engineer- Visa (Bengaluru)",
+      "company": "Foraysoft",
+      "location": "India",
+      "url": "https://www.shine.com/jobs/sre-engineer-visa-bengaluru/foraysoft/19216401",
+      "source": "Shine",
+      "posted_at": "2026-07-16T00:00:00.000Z",
+      "score": 1.0,
+      "cloud_tags": "none",
+      "skills": [],
+      "experience": "3-6 yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "S5qtmYk-gGpONmfyAAAAAA==",
+      "title": "GoAnywhere MFT SRE / Operations Support Engineer (Telangana)",
+      "company": "Tror",
+      "location": "India",
+      "url": "https://www.shine.com/jobs/goanywhere-mft-sre-operations-support-engineer-telangana/tror/19222165",
+      "source": "Shine",
+      "posted_at": "2026-07-17T00:00:00.000Z",
+      "score": 0.5,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure",
+        "Python"
+      ],
+      "experience": "4-8 yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "hjnxa_dbVaBHidnwAAAAAA==",
+      "title": "Specialist Site Reliability Engineer (SRE) - Power Programmer (Bengaluru)",
+      "company": "Infosys",
+      "location": "India",
+      "url": "https://www.shine.com/jobs/specialist-site-reliability-engineer-sre-power-programmer-bengaluru/infosys/19216407",
+      "source": "Shine",
+      "posted_at": "2026-07-16T00:00:00.000Z",
+      "score": 0.5,
+      "cloud_tags": "none",
+      "skills": [
+        "Python"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "dqeqRpV9xP_ph1pdAAAAAA==",
+      "title": "SRE -Dynatrace + Splunk (Virtual Drive-18th July-Sat)",
+      "company": "HCLTech",
+      "location": "India",
+      "url": "https://in.linkedin.com/jobs/view/sre-dynatrace-%2B-splunk-virtual-drive-18th-july-sat-at-hcltech-4438469294",
+      "source": "LinkedIn",
+      "posted_at": "2026-07-16T00:00:00.000Z",
+      "score": 0.5,
+      "cloud_tags": "none",
+      "skills": [
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "HBsTfzqK3tS9wE43AAAAAA==",
+      "title": "Site Reliability Engineering Lead - BPL (based in Pune)",
+      "company": "Barclays",
+      "location": "Pune, Maharashtra",
+      "url": "https://search.jobs.barclays/en/job/pune/site-reliability-engineering-lead-bpl-based-in-pune/13015/97821682688",
+      "source": "Barclays Careers",
+      "posted_at": "2026-07-14T00:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "none",
+      "skills": [
+        "CI/CD"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "zVGmxXOg816rmdtUAAAAAA==",
+      "title": "Sr. Site Reliability Engineer Hybrid Remote, Pune, Maharashtra Sr. Site Reliability Engineer",
+      "company": "Relatient",
+      "location": "Remote",
+      "url": "https://jobs.bpc.com/companies/relatient-2/jobs/85973794-sr-site-reliability-engineer-hybrid-remote-pune-maharashtra-sr-site-reliability-engineer",
+      "source": "Brighton Park Capital Job Board",
+      "posted_at": "2026-07-12T00:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS",
+        "CI/CD"
+      ],
+      "experience": "8+ yrs",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "oovq1Ocb065rIJsBAAAAAA==",
+      "title": "SRE Architect",
+      "company": "NTT DATA",
+      "location": "India",
+      "url": "https://careers.services.global.ntt/global/en/job/R-147387/SRE-Architect",
+      "source": "NTT DATA Careers",
+      "posted_at": "2026-07-17T00:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "none",
+      "skills": [],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
+    {
+      "id": "5-p4KdT1f1n9y4_cAAAAAA==",
+      "title": "Network Engineer - Senior Member, Tech (SRE)",
+      "company": "D. E. Shaw India",
+      "location": "India",
+      "url": "https://www.deshawindia.com/careers/network-engineer-senior-member-tech-sre-6954",
+      "source": "D. E. Shaw India",
+      "posted_at": "2026-07-18T19:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "none",
+      "skills": [],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-19T15:28:56.673346+00:00"
+    },
     {
       "id": "ycBZ6p0P3-vMO9weAAAAAA==",
       "title": "Specialist, DevOps Engineer",
@@ -347,7 +1166,7 @@
         "Ansible",
         "CI/CD"
       ],
-      "experience": "",
+      "experience": "0-3 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -365,7 +1184,7 @@
         "GCP",
         "Kubernetes"
       ],
-      "experience": "",
+      "experience": "0-5 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -646,7 +1465,7 @@
       "skills": [
         "GCP"
       ],
-      "experience": "",
+      "experience": "0-2 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -665,7 +1484,7 @@
         "AWS",
         "Jenkins"
       ],
-      "experience": "",
+      "experience": "0-5 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -682,7 +1501,7 @@
       "skills": [
         "GCP"
       ],
-      "experience": "",
+      "experience": "0-1 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -787,7 +1606,7 @@
         "Jenkins",
         "CI/CD"
       ],
-      "experience": "",
+      "experience": "0-2 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -905,7 +1724,7 @@
         "Kubernetes",
         "Python"
       ],
-      "experience": "",
+      "experience": "0-3 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -923,7 +1742,7 @@
         "Kubernetes",
         "Python"
       ],
-      "experience": "",
+      "experience": "0-3 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -980,7 +1799,7 @@
         "Ansible",
         "CI/CD"
       ],
-      "experience": "",
+      "experience": "0-2 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1067,7 +1886,7 @@
         "Kubernetes",
         "Python"
       ],
-      "experience": "",
+      "experience": "0-3 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1087,7 +1906,7 @@
         "Docker",
         "Python"
       ],
-      "experience": "",
+      "experience": "0-5 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1149,7 +1968,7 @@
         "Docker",
         "Jenkins"
       ],
-      "experience": "",
+      "experience": "0-1 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1167,7 +1986,7 @@
         "AWS",
         "Docker"
       ],
-      "experience": "",
+      "experience": "0-4 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1187,7 +2006,7 @@
         "Kubernetes",
         "CI/CD"
       ],
-      "experience": "",
+      "experience": "0-2 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1353,7 +2172,7 @@
       "skills": [
         "Grafana"
       ],
-      "experience": "",
+      "experience": "0-0 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1370,7 +2189,7 @@
       "skills": [
         "Azure"
       ],
-      "experience": "",
+      "experience": "0-5 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1385,7 +2204,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-4 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1400,7 +2219,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-2 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1415,7 +2234,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-4 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1430,7 +2249,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-2 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1445,7 +2264,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-3 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1460,7 +2279,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-9 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1475,7 +2294,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-5 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1490,7 +2309,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-5 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1505,7 +2324,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-5 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1520,7 +2339,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-4 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1535,7 +2354,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-2 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1552,7 +2371,7 @@
       "skills": [
         "AWS"
       ],
-      "experience": "",
+      "experience": "0-5 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1567,7 +2386,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-2 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1582,7 +2401,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-1 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1597,7 +2416,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-1 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1615,7 +2434,7 @@
         "Azure",
         "Ansible"
       ],
-      "experience": "",
+      "experience": "0-5 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1632,7 +2451,7 @@
       "skills": [
         "Jenkins"
       ],
-      "experience": "",
+      "experience": "0-3 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1647,7 +2466,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-5 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1662,7 +2481,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-1 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1677,7 +2496,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-5 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1692,7 +2511,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-1 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1707,7 +2526,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-5 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1722,7 +2541,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-2 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1737,7 +2556,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-5 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
@@ -1752,7 +2571,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "",
+      "experience": "0-2 yrs",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
