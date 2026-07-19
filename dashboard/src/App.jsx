@@ -302,27 +302,55 @@ export default function App() {
   }, [data, overrides]);
 
   const tabJobs = useMemo(() => jobs.filter((j) => matchesTab(j, tab)), [jobs, tab]);
+  const matchesCompany = (j) =>
+    !companyFilter || (j.company || "").trim().toLowerCase() === companyFilter;
+
   const visibleJobs = useMemo(
     () =>
       tabJobs
         .filter((j) => matchesLocation(j, locationPill))
         .filter((j) => matchesExpFilter(j, expFilter))
         .filter((j) => matchesAge(j, maxAge))
-        .filter(
-          (j) =>
-            !companyFilter ||
-            (j.company || "").trim().toLowerCase() === companyFilter
-        ),
+        .filter(matchesCompany),
     [tabJobs, locationPill, expFilter, maxAge, companyFilter]
   );
 
-  // Alphabetical company list (with per-company counts) for the dropdown,
-  // derived from the current tab so the options stay relevant. Case
-  // variants from different job boards ("Deloitte"/"deloitte") merge into
-  // one entry keyed by the lowercased name.
+  // Faceted filtering: each control's options/counts reflect every OTHER
+  // active filter, so e.g. picking Pune narrows the company dropdown to
+  // companies with Pune jobs.
+  const locationBase = useMemo(
+    () =>
+      tabJobs
+        .filter((j) => matchesExpFilter(j, expFilter))
+        .filter((j) => matchesAge(j, maxAge))
+        .filter(matchesCompany),
+    [tabJobs, expFilter, maxAge, companyFilter]
+  );
+
+  const expBase = useMemo(
+    () =>
+      tabJobs
+        .filter((j) => matchesLocation(j, locationPill))
+        .filter((j) => matchesAge(j, maxAge))
+        .filter(matchesCompany),
+    [tabJobs, locationPill, maxAge, companyFilter]
+  );
+
+  const companyBase = useMemo(
+    () =>
+      tabJobs
+        .filter((j) => matchesLocation(j, locationPill))
+        .filter((j) => matchesExpFilter(j, expFilter))
+        .filter((j) => matchesAge(j, maxAge)),
+    [tabJobs, locationPill, expFilter, maxAge]
+  );
+
+  // Alphabetical company list (with per-company counts) for the dropdown.
+  // Case variants from different job boards ("Deloitte"/"deloitte") merge
+  // into one entry keyed by the lowercased name.
   const companies = useMemo(() => {
     const groups = new Map();
-    for (const j of tabJobs) {
+    for (const j of companyBase) {
       const name = (j.company || "").trim();
       if (!name) continue;
       const key = name.toLowerCase();
@@ -333,7 +361,15 @@ export default function App() {
     return [...groups.values()].sort((a, b) =>
       a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
     );
-  }, [tabJobs]);
+  }, [companyBase]);
+
+  // If another filter change removed the selected company from the list,
+  // clear the selection instead of silently showing zero jobs.
+  useEffect(() => {
+    if (companyFilter && !companies.some((c) => c.key === companyFilter)) {
+      setCompanyFilter("");
+    }
+  }, [companies, companyFilter]);
 
   const stats = useMemo(() => {
     const newToday = tabJobs.filter((j) => isToday(j.created_at)).length;
@@ -434,7 +470,7 @@ export default function App() {
       {/* Location pills */}
       <div className="mt-6 flex flex-wrap gap-2">
         {LOCATION_PILLS.map((pill) => {
-          const count = tabJobs.filter((j) => matchesLocation(j, pill)).length;
+          const count = locationBase.filter((j) => matchesLocation(j, pill)).length;
           const active = locationPill === pill;
           return (
             <button
@@ -456,7 +492,7 @@ export default function App() {
       {tab !== "noexp" && (
         <div className="mt-2 flex flex-wrap gap-2">
           {EXP_FILTERS.map((f) => {
-            const count = tabJobs.filter((j) => matchesExpFilter(j, f)).length;
+            const count = expBase.filter((j) => matchesExpFilter(j, f)).length;
             const active = expFilter?.id === f.id;
             return (
               <button
