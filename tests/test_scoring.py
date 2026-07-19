@@ -142,3 +142,56 @@ class TestQueryRotation:
 
     def test_monthly_quota_within_free_tier(self):
         assert radar.DAILY_BUDGET * 31 <= 200
+
+
+class TestNormalizeNaukri:
+    def _item(self, **overrides):
+        base = {
+            "jobId": "250718900001",
+            "title": "Senior DevOps Engineer",
+            "company": "Acme Tech",
+            "location": "Pune, Maharashtra",
+            "experience": "4-8 Yrs",
+            "skills": ["GCP", "Terraform", "Kubernetes"],
+            "createdDate": 1784448000000,
+            "portalUrl": "https://www.naukri.com/job-listings-x-250718900001",
+            "description": "GCP GKE Terraform Kubernetes ArgoCD pipelines",
+        }
+        base.update(overrides)
+        return base
+
+    def test_happy_path(self):
+        job = radar.normalize_naukri(self._item())
+        assert job["id"] == "nk-250718900001"
+        assert job["source"] == "Naukri"
+        assert job["company"] == "Acme Tech"
+        assert job["cloud_tags"] == "gcp"
+        assert job["experience"] == "4-8 yrs"
+        assert job["score"] > 6
+
+    def test_filters_out_non_target_locations(self):
+        assert radar.normalize_naukri(self._item(location="Chennai, Tamil Nadu")) is None
+
+    def test_remote_and_hybrid_locations_kept(self):
+        assert radar.normalize_naukri(self._item(location="Remote")) is not None
+        assert radar.normalize_naukri(self._item(location="Hybrid - Bengaluru")) is not None
+
+    def test_missing_title_or_url_dropped(self):
+        assert radar.normalize_naukri(self._item(title="")) is None
+        assert radar.normalize_naukri(self._item(portalUrl="", url="", jdURL="")) is None
+
+    def test_nested_company_dict_and_list_location(self):
+        job = radar.normalize_naukri(
+            self._item(company={"name": "Nested Corp"}, location=["Pune", "Hyderabad"])
+        )
+        assert job["company"] == "Nested Corp"
+        assert "Pune" in job["location"]
+
+    def test_epoch_millis_date_parsed(self):
+        job = radar.normalize_naukri(self._item())
+        assert job["posted_at"].startswith("2026-")
+
+    def test_id_falls_back_to_url_hash(self):
+        job = radar.normalize_naukri(self._item(jobId="", id=""))
+        assert job["id"].startswith("nk-")
+        assert len(job["id"]) > 3

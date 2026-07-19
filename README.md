@@ -19,9 +19,14 @@ Refresh on demand with one click from the dashboard's "Run radar now" link
 
 ## How it works
 
-1. **Fetch** — queries JSearch across 7 role keywords × 4 locations (Pune,
-   Hyderabad, Bangalore, Remote India), 6 queries per day on a rotating
-   schedule, jobs posted in the last 7 days (see quota note below).
+1. **Fetch** — two sources:
+   - **JSearch API** (aggregates LinkedIn, Indeed, Glassdoor, Shine, company
+     career pages, and 30+ other portals): 7 role keywords × 4 locations
+     (Pune, Hyderabad, Bangalore, Remote India), 6 queries per day on a
+     rotating schedule, jobs posted in the last 7 days (see quota note).
+   - **Naukri** (via an Apify scraper actor, since Naukri isn't covered by
+     the aggregator): 4 role keywords, 0–8 yrs experience, last 7 days,
+     up to 60 listings per daily run, filtered to the target locations.
 2. **Score** — 0–10 against the profile: +3 GCP/GKE, +2 Terraform,
    +1.5 Kubernetes/Docker, +1 ArgoCD/GitOps, +1 CI/CD, +0.5 Python,
    +1 experience overlaps 4–8 yrs, −2 requires 10+ yrs, −1 AWS/Azure-only.
@@ -46,13 +51,26 @@ Refresh on demand with one click from the dashboard's "Run radar now" link
 > daily budget, set a repository **variable** (not secret) named
 > `MAX_API_CALLS` (Settings → Secrets and variables → Actions → Variables).
 
-### 2. Add the GitHub repository secret
+### 2. Get the Apify token (for the Naukri source)
+
+1. Create a free account at <https://console.apify.com> (no card needed —
+   the free plan includes **$5 of platform credits every month**).
+2. In the console: **Settings → API & Integrations** → copy your
+   **Personal API token** — that is your `APIFY_TOKEN`.
+
+> 💰 **Naukri cost:** the scraper charges ~$0.0015 per listing on the free
+> tier. The default 60 listings/day ≈ **$2.70/month**, well inside the $5
+> free credits. Tune with a repository variable `MAX_NAUKRI_RESULTS`.
+> Skipping this step is fine — without the token the radar simply runs
+> with JSearch only.
+
+### 3. Add the GitHub repository secrets
 
 1. Push this repo to GitHub.
 2. On GitHub: **Settings → Secrets and variables → Actions → New repository secret**.
-3. Name: `RAPIDAPI_KEY`, Value: your key.
+3. Add `RAPIDAPI_KEY` (your JSearch key) and `APIFY_TOKEN` (from step 2).
 
-### 3. Deploy the dashboard to Netlify
+### 4. Deploy the dashboard to Netlify
 
 GitHub Pages requires a public repo on the free plan; Netlify's free tier
 deploys private repos, so the dashboard is hosted there instead.
@@ -69,7 +87,7 @@ deploys private repos, so the dashboard is hosted there instead.
 Every time the daily radar workflow commits fresh data to `main`, Netlify
 rebuilds and redeploys the dashboard automatically.
 
-### 4. Test with a manual run
+### 5. Test with a manual run
 
 1. On GitHub: **Actions → Job Radar (daily) → Run workflow → Run workflow**.
 2. Watch the run: it fetches jobs, updates `data/jobs.db` + `data/jobs.json`,
@@ -111,7 +129,8 @@ npm run dev                     # auto-copies ../data/jobs.json into public/
 - Light/dark mode with a toggle (defaults to your system preference).
 - **Refresh** button (re-reads the latest data) and **Run radar now ↗**
   link that opens the GitHub Actions page to trigger a fresh fetch.
-- **Owner mode** — the Run radar button is hidden for visitors. Open the
-  site once as `https://<your-site>/#owner` to reveal it on your browser
-  (remembered in localStorage); `#guest` hides it again. This is cosmetic:
-  actually running the workflow always requires GitHub write access.
+- **Owner mode** — the Run radar button is hidden by default and visible
+  only while the URL carries the `#owner` hash: bookmark
+  `https://<your-site>/#owner` and use that link yourself. Removing the
+  hash hides the button again. This is cosmetic: actually running the
+  workflow always requires GitHub write access.
