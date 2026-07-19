@@ -68,6 +68,13 @@ ROLES = [
     "azure devops",
     "platform engineer",
     "sre",
+    # DevOps-in-substance roles that often carry different titles.
+    # Rotation math: len(ROLES) * len(LOCATIONS) combos / DAILY_BUDGET per
+    # day must stay <= the 7-day search window for lossless coverage
+    # (10 * 4 / 6 = ~6.7 days — checked by a unit test).
+    "cloud engineer",
+    "infrastructure engineer",
+    "kubernetes engineer",
 ]
 
 LOCATIONS = ["Pune", "Hyderabad", "Bangalore", "Remote India"]
@@ -332,7 +339,15 @@ APIFY_RUN_URL = (
     "blackfalcondata~naukri-jobs-feed/run-sync-get-dataset-items"
 )
 
-NAUKRI_QUERIES = ["devops engineer", "gcp devops", "platform engineer", "sre"]
+NAUKRI_QUERIES = [
+    "devops engineer",
+    "gcp devops",
+    "platform engineer",
+    "sre",
+    "cloud engineer",
+    "infrastructure engineer",
+    "kubernetes engineer",
+]
 NAUKRI_MAX_RESULTS = 60
 
 _TARGET_LOCATION_RE = re.compile(

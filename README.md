@@ -21,12 +21,17 @@ Refresh on demand with one click from the dashboard's "Run radar now" link
 
 1. **Fetch** — two sources:
    - **JSearch API** (aggregates LinkedIn, Indeed, Glassdoor, Shine, company
-     career pages, and 30+ other portals): 7 role keywords × 4 locations
+     career pages, and 30+ other portals): 10 role keywords × 4 locations
      (Pune, Hyderabad, Bangalore, Remote India), 6 queries per day on a
      rotating schedule, jobs posted in the last 7 days (see quota note).
+     Keywords include DevOps-adjacent titles (cloud engineer,
+     infrastructure engineer, kubernetes engineer) so DevOps roles under
+     different names are caught too — and both engines also match
+     keywords inside descriptions, not just titles.
    - **Naukri** (via an Apify scraper actor, since Naukri isn't covered by
-     the aggregator): 4 role keywords, 0–8 yrs experience, last 7 days,
-     up to 60 listings per daily run, filtered to the target locations.
+     the aggregator): the same role keywords, 0–8 yrs experience, last
+     7 days, up to 60 listings per daily run, filtered to the target
+     locations.
 2. **Score** — 0–10 against the profile: +3 GCP/GKE, +2 Terraform,
    +1.5 Kubernetes/Docker, +1 ArgoCD/GitOps, +1 CI/CD, +0.5 Python,
    +1 experience overlaps 4–8 yrs, −2 requires 10+ yrs, −1 AWS/Azure-only.
