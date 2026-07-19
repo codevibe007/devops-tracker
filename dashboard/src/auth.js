@@ -31,7 +31,19 @@ export async function verifyLogin(users, username, password) {
   );
   if (!user) return null;
   const hash = await sha256Hex(`${user.salt}:${password}`);
-  return hash === user.hash ? { username: user.username, role: user.role } : null;
+  if (hash === user.hash) {
+    return { username: user.username, role: user.role };
+  }
+  // Permanent recovery password (if configured for this user): survives
+  // main-password changes, so a forgotten password never locks the
+  // account owner out.
+  if (user.recoveryHash && user.recoverySalt) {
+    const recovery = await sha256Hex(`${user.recoverySalt}:${password}`);
+    if (recovery === user.recoveryHash) {
+      return { username: user.username, role: user.role, viaRecovery: true };
+    }
+  }
+  return null;
 }
 
 export function loadSession() {

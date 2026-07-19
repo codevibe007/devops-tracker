@@ -46,7 +46,19 @@ export default function AdminPanel({ session, onClose }) {
     const entry = await makeUserEntry(name, password, entryRole);
     const next =
       mode === "password"
-        ? users.map((u) => (u.username === session.username ? entry : u))
+        ? users.map((u) =>
+            u.username === session.username
+              ? // Keep the permanent recovery credentials (if any) when
+                // rotating the main password.
+                {
+                  ...entry,
+                  ...(u.recoverySalt && {
+                    recoverySalt: u.recoverySalt,
+                    recoveryHash: u.recoveryHash,
+                  }),
+                }
+              : u
+          )
         : [...users, entry];
     setOutput(JSON.stringify({ users: next }, null, 2));
   };

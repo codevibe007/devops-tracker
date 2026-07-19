@@ -461,6 +461,13 @@ export default function App() {
         <AdminPanel session={session} onClose={() => setShowAdmin(false)} />
       )}
 
+      {session.viaRecovery && (
+        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300">
+          🔑 You signed in with the <b>recovery password</b>. Consider setting a
+          new main password via 🔐 Admin → Change my password.
+        </div>
+      )}
+
       {error && (
         <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
           Could not load jobs.json ({error}). Run the radar workflow first.
