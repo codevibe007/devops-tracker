@@ -12,9 +12,32 @@ const TABS = [
 // postings that don't state experience live in the "No Exp Listed" tab.
 const MAX_EXP_MIN_YEARS = 8;
 
+const EXP_FILTERS = [
+  { id: "0-2", label: "0-2 yrs", lo: 0, hi: 2 },
+  { id: "2-4", label: "2-4 yrs", lo: 2, hi: 4 },
+  { id: "4-6", label: "4-6 yrs", lo: 4, hi: 6 },
+  { id: "6-8", label: "6-8 yrs", lo: 6, hi: 8 },
+];
+
+// Parse "4-8 yrs" -> {min:4, max:8}, "7+ yrs" -> {min:7, max:null}.
+function expRange(job) {
+  const range = /^(\d+)\s*-\s*(\d+)/.exec(job.experience || "");
+  if (range) return { min: +range[1], max: +range[2] };
+  const plus = /^(\d+)\+/.exec(job.experience || "");
+  if (plus) return { min: +plus[1], max: null };
+  return null;
+}
+
 function minExpYears(job) {
-  const m = /^(\d+)/.exec(job.experience || "");
-  return m ? parseInt(m[1], 10) : null;
+  const r = expRange(job);
+  return r ? r.min : null;
+}
+
+function matchesExpFilter(job, filter) {
+  if (!filter) return true;
+  const r = expRange(job);
+  if (!r) return false;
+  return r.min <= filter.hi && (r.max === null || r.max >= filter.lo);
 }
 
 function matchesTab(job, tab) {
@@ -204,6 +227,7 @@ export default function App() {
   const [error, setError] = useState(null);
   const [tab, setTab] = useState("all");
   const [locationPill, setLocationPill] = useState(null);
+  const [expFilter, setExpFilter] = useState(null);
   const [overrides, setOverrides] = useState(loadOverrides);
   const [dark, setDark] = useState(() =>
     document.documentElement.classList.contains("dark")
@@ -259,8 +283,11 @@ export default function App() {
 
   const tabJobs = useMemo(() => jobs.filter((j) => matchesTab(j, tab)), [jobs, tab]);
   const visibleJobs = useMemo(
-    () => tabJobs.filter((j) => matchesLocation(j, locationPill)),
-    [tabJobs, locationPill]
+    () =>
+      tabJobs
+        .filter((j) => matchesLocation(j, locationPill))
+        .filter((j) => matchesExpFilter(j, expFilter)),
+    [tabJobs, locationPill, expFilter]
   );
 
   const stats = useMemo(() => {
@@ -329,7 +356,12 @@ export default function App() {
           return (
             <button
               key={t.id}
-              onClick={() => setTab(t.id)}
+              onClick={() => {
+                setTab(t.id);
+                // The exp filter is meaningless for jobs without a stated
+                // experience, so clear it when entering that tab.
+                if (t.id === "noexp") setExpFilter(null);
+              }}
               className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
                 active
                   ? "bg-white text-slate-900 shadow-sm dark:bg-slate-700 dark:text-white"
@@ -371,6 +403,29 @@ export default function App() {
           );
         })}
       </div>
+
+      {/* Experience pills (not shown on the No Exp Listed tab) */}
+      {tab !== "noexp" && (
+        <div className="mt-2 flex flex-wrap gap-2">
+          {EXP_FILTERS.map((f) => {
+            const count = tabJobs.filter((j) => matchesExpFilter(j, f)).length;
+            const active = expFilter?.id === f.id;
+            return (
+              <button
+                key={f.id}
+                onClick={() => setExpFilter(active ? null : f)}
+                className={`rounded-full border px-3 py-1 text-sm transition ${
+                  active
+                    ? "border-emerald-600 bg-emerald-600 text-white"
+                    : "border-slate-300 text-slate-600 hover:border-slate-400 dark:border-slate-700 dark:text-slate-300"
+                }`}
+              >
+                {f.label} <span className="opacity-60">{count}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {/* Job list */}
       <main className="mt-6 grid gap-3">
