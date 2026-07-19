@@ -7,6 +7,24 @@
       "hash": "bbcf6ab1f88a7f333913d51d1068761f75745f218dfeebb1ea2851f823430ced",
       "recoverySalt": "563af4a1f2abe485",
       "recoveryHash": "430f543c7b88552c2622081e11e66ee2b18d697676bb7da7cfa8ac02f576c4a4"
+    },
+    {
+      "username": "guest",
+      "role": "member",
+      "salt": "394eea807260309e",
+      "hash": "ac7b021137fbfcf46d4d4d19b44c03fa30c0f97cc8e7b58af79b40ac9e4348b1"
+    },
+    {
+      "username": "guest1k",
+      "role": "member",
+      "salt": "b13d6a884c470618",
+      "hash": "771929ffc7dc2c7df5f4ad766934112ed1b2fae7ba595820122caf9d7f764e7d"
+    },
+    {
+      "username": "guest2s",
+      "role": "member",
+      "salt": "eccead26565e24b8",
+      "hash": "592889b067ad6e857eb98df08a03ef21885d309ff38bf44aac6503dd4c232dc4"
     }
   ]
 }
