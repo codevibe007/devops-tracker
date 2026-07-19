@@ -40,6 +40,24 @@ function matchesExpFilter(job, filter) {
   return r.min <= filter.hi && (r.max === null || r.max >= filter.lo);
 }
 
+const AGE_OPTIONS = [
+  { value: 7, label: "Last 7 days" },
+  { value: 15, label: "Last 15 days" },
+  { value: 30, label: "Last 30 days" },
+];
+
+function postedDaysAgo(job) {
+  const t = new Date(job.posted_at || "").getTime();
+  if (Number.isNaN(t)) return null;
+  return (Date.now() - t) / 86_400_000;
+}
+
+function matchesAge(job, maxDays) {
+  if (!maxDays) return true;
+  const days = postedDaysAgo(job);
+  return days !== null && days <= maxDays;
+}
+
 function matchesTab(job, tab) {
   const min = minExpYears(job);
   if (tab === "noexp") return min === null;
@@ -228,6 +246,8 @@ export default function App() {
   const [tab, setTab] = useState("all");
   const [locationPill, setLocationPill] = useState(null);
   const [expFilter, setExpFilter] = useState(null);
+  const [maxAge, setMaxAge] = useState(null);
+  const [companyFilter, setCompanyFilter] = useState("");
   const [overrides, setOverrides] = useState(loadOverrides);
   const [dark, setDark] = useState(() =>
     document.documentElement.classList.contains("dark")
@@ -286,9 +306,34 @@ export default function App() {
     () =>
       tabJobs
         .filter((j) => matchesLocation(j, locationPill))
-        .filter((j) => matchesExpFilter(j, expFilter)),
-    [tabJobs, locationPill, expFilter]
+        .filter((j) => matchesExpFilter(j, expFilter))
+        .filter((j) => matchesAge(j, maxAge))
+        .filter(
+          (j) =>
+            !companyFilter ||
+            (j.company || "").trim().toLowerCase() === companyFilter
+        ),
+    [tabJobs, locationPill, expFilter, maxAge, companyFilter]
   );
+
+  // Alphabetical company list (with per-company counts) for the dropdown,
+  // derived from the current tab so the options stay relevant. Case
+  // variants from different job boards ("Deloitte"/"deloitte") merge into
+  // one entry keyed by the lowercased name.
+  const companies = useMemo(() => {
+    const groups = new Map();
+    for (const j of tabJobs) {
+      const name = (j.company || "").trim();
+      if (!name) continue;
+      const key = name.toLowerCase();
+      const g = groups.get(key);
+      if (g) g.count += 1;
+      else groups.set(key, { key, name, count: 1 });
+    }
+    return [...groups.values()].sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+    );
+  }, [tabJobs]);
 
   const stats = useMemo(() => {
     const newToday = tabJobs.filter((j) => isToday(j.created_at)).length;
@@ -361,6 +406,9 @@ export default function App() {
                 // The exp filter is meaningless for jobs without a stated
                 // experience, so clear it when entering that tab.
                 if (t.id === "noexp") setExpFilter(null);
+                // Company options are derived per tab; keep the selection
+                // from pointing at a company the new tab doesn't contain.
+                setCompanyFilter("");
               }}
               className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
                 active
@@ -426,6 +474,36 @@ export default function App() {
           })}
         </div>
       )}
+
+      {/* Posted-age and company dropdowns */}
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <select
+          value={maxAge ?? ""}
+          onChange={(e) => setMaxAge(e.target.value ? Number(e.target.value) : null)}
+          className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
+          title="Filter by how recently the job was posted"
+        >
+          <option value="">Posted: any time</option>
+          {AGE_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={companyFilter}
+          onChange={(e) => setCompanyFilter(e.target.value)}
+          className="max-w-[16rem] rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
+          title="Filter by company"
+        >
+          <option value="">All companies ({companies.length})</option>
+          {companies.map((c) => (
+            <option key={c.key} value={c.key}>
+              {c.name} ({c.count})
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Job list */}
       <main className="mt-6 grid gap-3">
