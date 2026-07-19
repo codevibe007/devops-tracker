@@ -97,7 +97,10 @@ npm run dev                     # auto-copies ../data/jobs.json into public/
 ## Dashboard features
 
 - Cloud tabs (**All DevOps / GCP / AWS / Azure**) with per-tab job counts —
-  multi-cloud jobs appear in every matching tab.
+  multi-cloud jobs appear in every matching tab. These tabs only show jobs
+  whose stated experience overlaps **0–8 yrs**; postings that don't state
+  experience are collected in a separate **No Exp Listed** tab, and jobs
+  demanding more than 8 yrs minimum are hidden.
 - Stat cards (New today / Total tracked / Applied / Avg match score) that
   recalculate per selected tab.
 - Location filter pills (Pune / Hyderabad / Bangalore / Remote) with counts,

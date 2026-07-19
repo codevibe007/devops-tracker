@@ -1,11 +1,28 @@
 import { useEffect, useMemo, useState } from "react";
 
-const CLOUD_TABS = [
+const TABS = [
   { id: "all", label: "All DevOps" },
   { id: "gcp", label: "GCP" },
   { id: "aws", label: "AWS" },
   { id: "azure", label: "Azure" },
+  { id: "noexp", label: "No Exp Listed" },
 ];
+
+// Main tabs only show jobs whose stated experience overlaps 0-8 yrs;
+// postings that don't state experience live in the "No Exp Listed" tab.
+const MAX_EXP_MIN_YEARS = 8;
+
+function minExpYears(job) {
+  const m = /^(\d+)/.exec(job.experience || "");
+  return m ? parseInt(m[1], 10) : null;
+}
+
+function matchesTab(job, tab) {
+  const min = minExpYears(job);
+  if (tab === "noexp") return min === null;
+  if (min === null || min > MAX_EXP_MIN_YEARS) return false;
+  return matchesCloud(job, tab);
+}
 
 const LOCATION_PILLS = ["Pune", "Hyderabad", "Bangalore", "Remote"];
 
@@ -101,9 +118,17 @@ function JobCard({ job, status, onSetStatus }) {
           <h3 className="truncate font-semibold text-slate-900 dark:text-slate-100">
             {job.title}
           </h3>
-          <p className="mt-0.5 truncate text-sm text-slate-600 dark:text-slate-400">
-            {job.company} · {job.location}
-            {job.experience ? ` · ${job.experience}` : ""}
+          <div className="mt-1.5 flex items-center gap-2">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-blue-100 text-xs font-bold uppercase text-blue-700 dark:bg-blue-900/60 dark:text-blue-300">
+              {(job.company || "?").trim().charAt(0)}
+            </span>
+            <span className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">
+              {job.company || "Company not listed"}
+            </span>
+          </div>
+          <p className="mt-1 truncate text-sm text-slate-600 dark:text-slate-400">
+            {job.location}
+            {job.experience ? ` · ${job.experience}` : " · exp not stated"}
           </p>
           <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">
             {job.source} · {timeAgo(job.posted_at)}
@@ -232,7 +257,7 @@ export default function App() {
     return list.sort((a, b) => b.score - a.score);
   }, [data, overrides]);
 
-  const tabJobs = useMemo(() => jobs.filter((j) => matchesCloud(j, tab)), [jobs, tab]);
+  const tabJobs = useMemo(() => jobs.filter((j) => matchesTab(j, tab)), [jobs, tab]);
   const visibleJobs = useMemo(
     () => tabJobs.filter((j) => matchesLocation(j, locationPill)),
     [tabJobs, locationPill]
@@ -298,8 +323,8 @@ export default function App() {
 
       {/* Cloud tabs */}
       <nav className="mt-6 flex flex-wrap gap-1 rounded-xl bg-slate-100 p-1 dark:bg-slate-900">
-        {CLOUD_TABS.map((t) => {
-          const count = jobs.filter((j) => matchesCloud(j, t.id)).length;
+        {TABS.map((t) => {
+          const count = jobs.filter((j) => matchesTab(j, t.id)).length;
           const active = tab === t.id;
           return (
             <button
