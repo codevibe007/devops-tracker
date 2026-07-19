@@ -5,6 +5,11 @@
   base = "dashboard"
   command = "npm run build"
   publish = "dist"
+  # With a base directory set, Netlify skips builds for commits that don't
+  # touch files under it — which silently ignored the daily data-only
+  # commits (data/jobs.json lives outside dashboard/). A non-zero ignore
+  # command means "never skip": every push to main deploys.
+  ignore = "exit 1"
 
 [build.environment]
   NODE_VERSION = "20"
