@@ -1,11 +1,69 @@
 import { useEffect, useMemo, useState } from "react";
 
-const CLOUD_TABS = [
+const TABS = [
   { id: "all", label: "All DevOps" },
   { id: "gcp", label: "GCP" },
   { id: "aws", label: "AWS" },
   { id: "azure", label: "Azure" },
+  { id: "noexp", label: "No Exp Listed" },
 ];
+
+// Main tabs only show jobs whose stated experience overlaps 0-8 yrs;
+// postings that don't state experience live in the "No Exp Listed" tab.
+const MAX_EXP_MIN_YEARS = 8;
+
+const EXP_FILTERS = [
+  { id: "0-2", label: "0-2 yrs", lo: 0, hi: 2 },
+  { id: "2-4", label: "2-4 yrs", lo: 2, hi: 4 },
+  { id: "4-6", label: "4-6 yrs", lo: 4, hi: 6 },
+  { id: "6-8", label: "6-8 yrs", lo: 6, hi: 8 },
+];
+
+// Parse "4-8 yrs" -> {min:4, max:8}, "7+ yrs" -> {min:7, max:null}.
+function expRange(job) {
+  const range = /^(\d+)\s*-\s*(\d+)/.exec(job.experience || "");
+  if (range) return { min: +range[1], max: +range[2] };
+  const plus = /^(\d+)\+/.exec(job.experience || "");
+  if (plus) return { min: +plus[1], max: null };
+  return null;
+}
+
+function minExpYears(job) {
+  const r = expRange(job);
+  return r ? r.min : null;
+}
+
+function matchesExpFilter(job, filter) {
+  if (!filter) return true;
+  const r = expRange(job);
+  if (!r) return false;
+  return r.min <= filter.hi && (r.max === null || r.max >= filter.lo);
+}
+
+const AGE_OPTIONS = [
+  { value: 7, label: "Last 7 days" },
+  { value: 15, label: "Last 15 days" },
+  { value: 30, label: "Last 30 days" },
+];
+
+function postedDaysAgo(job) {
+  const t = new Date(job.posted_at || "").getTime();
+  if (Number.isNaN(t)) return null;
+  return (Date.now() - t) / 86_400_000;
+}
+
+function matchesAge(job, maxDays) {
+  if (!maxDays) return true;
+  const days = postedDaysAgo(job);
+  return days !== null && days <= maxDays;
+}
+
+function matchesTab(job, tab) {
+  const min = minExpYears(job);
+  if (tab === "noexp") return min === null;
+  if (min === null || min > MAX_EXP_MIN_YEARS) return false;
+  return matchesCloud(job, tab);
+}
 
 const LOCATION_PILLS = ["Pune", "Hyderabad", "Bangalore", "Remote"];
 
@@ -101,9 +159,17 @@ function JobCard({ job, status, onSetStatus }) {
           <h3 className="truncate font-semibold text-slate-900 dark:text-slate-100">
             {job.title}
           </h3>
-          <p className="mt-0.5 truncate text-sm text-slate-600 dark:text-slate-400">
-            {job.company} · {job.location}
-            {job.experience ? ` · ${job.experience}` : ""}
+          <div className="mt-1.5 flex items-center gap-2">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-blue-100 text-xs font-bold uppercase text-blue-700 dark:bg-blue-900/60 dark:text-blue-300">
+              {(job.company || "?").trim().charAt(0)}
+            </span>
+            <span className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">
+              {job.company || "Company not listed"}
+            </span>
+          </div>
+          <p className="mt-1 truncate text-sm text-slate-600 dark:text-slate-400">
+            {job.location}
+            {job.experience ? ` · ${job.experience}` : " · exp not stated"}
           </p>
           <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">
             {job.source} · {timeAgo(job.posted_at)}
@@ -179,6 +245,9 @@ export default function App() {
   const [error, setError] = useState(null);
   const [tab, setTab] = useState("all");
   const [locationPill, setLocationPill] = useState(null);
+  const [expFilter, setExpFilter] = useState(null);
+  const [maxAge, setMaxAge] = useState(null);
+  const [companyFilter, setCompanyFilter] = useState("");
   const [overrides, setOverrides] = useState(loadOverrides);
   const [dark, setDark] = useState(() =>
     document.documentElement.classList.contains("dark")
@@ -232,11 +301,75 @@ export default function App() {
     return list.sort((a, b) => b.score - a.score);
   }, [data, overrides]);
 
-  const tabJobs = useMemo(() => jobs.filter((j) => matchesCloud(j, tab)), [jobs, tab]);
+  const tabJobs = useMemo(() => jobs.filter((j) => matchesTab(j, tab)), [jobs, tab]);
+  const matchesCompany = (j) =>
+    !companyFilter || (j.company || "").trim().toLowerCase() === companyFilter;
+
   const visibleJobs = useMemo(
-    () => tabJobs.filter((j) => matchesLocation(j, locationPill)),
-    [tabJobs, locationPill]
+    () =>
+      tabJobs
+        .filter((j) => matchesLocation(j, locationPill))
+        .filter((j) => matchesExpFilter(j, expFilter))
+        .filter((j) => matchesAge(j, maxAge))
+        .filter(matchesCompany),
+    [tabJobs, locationPill, expFilter, maxAge, companyFilter]
   );
+
+  // Faceted filtering: each control's options/counts reflect every OTHER
+  // active filter, so e.g. picking Pune narrows the company dropdown to
+  // companies with Pune jobs.
+  const locationBase = useMemo(
+    () =>
+      tabJobs
+        .filter((j) => matchesExpFilter(j, expFilter))
+        .filter((j) => matchesAge(j, maxAge))
+        .filter(matchesCompany),
+    [tabJobs, expFilter, maxAge, companyFilter]
+  );
+
+  const expBase = useMemo(
+    () =>
+      tabJobs
+        .filter((j) => matchesLocation(j, locationPill))
+        .filter((j) => matchesAge(j, maxAge))
+        .filter(matchesCompany),
+    [tabJobs, locationPill, maxAge, companyFilter]
+  );
+
+  const companyBase = useMemo(
+    () =>
+      tabJobs
+        .filter((j) => matchesLocation(j, locationPill))
+        .filter((j) => matchesExpFilter(j, expFilter))
+        .filter((j) => matchesAge(j, maxAge)),
+    [tabJobs, locationPill, expFilter, maxAge]
+  );
+
+  // Alphabetical company list (with per-company counts) for the dropdown.
+  // Case variants from different job boards ("Deloitte"/"deloitte") merge
+  // into one entry keyed by the lowercased name.
+  const companies = useMemo(() => {
+    const groups = new Map();
+    for (const j of companyBase) {
+      const name = (j.company || "").trim();
+      if (!name) continue;
+      const key = name.toLowerCase();
+      const g = groups.get(key);
+      if (g) g.count += 1;
+      else groups.set(key, { key, name, count: 1 });
+    }
+    return [...groups.values()].sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+    );
+  }, [companyBase]);
+
+  // If another filter change removed the selected company from the list,
+  // clear the selection instead of silently showing zero jobs.
+  useEffect(() => {
+    if (companyFilter && !companies.some((c) => c.key === companyFilter)) {
+      setCompanyFilter("");
+    }
+  }, [companies, companyFilter]);
 
   const stats = useMemo(() => {
     const newToday = tabJobs.filter((j) => isToday(j.created_at)).length;
@@ -298,13 +431,21 @@ export default function App() {
 
       {/* Cloud tabs */}
       <nav className="mt-6 flex flex-wrap gap-1 rounded-xl bg-slate-100 p-1 dark:bg-slate-900">
-        {CLOUD_TABS.map((t) => {
-          const count = jobs.filter((j) => matchesCloud(j, t.id)).length;
+        {TABS.map((t) => {
+          const count = jobs.filter((j) => matchesTab(j, t.id)).length;
           const active = tab === t.id;
           return (
             <button
               key={t.id}
-              onClick={() => setTab(t.id)}
+              onClick={() => {
+                setTab(t.id);
+                // The exp filter is meaningless for jobs without a stated
+                // experience, so clear it when entering that tab.
+                if (t.id === "noexp") setExpFilter(null);
+                // Company options are derived per tab; keep the selection
+                // from pointing at a company the new tab doesn't contain.
+                setCompanyFilter("");
+              }}
               className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
                 active
                   ? "bg-white text-slate-900 shadow-sm dark:bg-slate-700 dark:text-white"
@@ -329,7 +470,7 @@ export default function App() {
       {/* Location pills */}
       <div className="mt-6 flex flex-wrap gap-2">
         {LOCATION_PILLS.map((pill) => {
-          const count = tabJobs.filter((j) => matchesLocation(j, pill)).length;
+          const count = locationBase.filter((j) => matchesLocation(j, pill)).length;
           const active = locationPill === pill;
           return (
             <button
@@ -345,6 +486,59 @@ export default function App() {
             </button>
           );
         })}
+      </div>
+
+      {/* Experience pills (not shown on the No Exp Listed tab) */}
+      {tab !== "noexp" && (
+        <div className="mt-2 flex flex-wrap gap-2">
+          {EXP_FILTERS.map((f) => {
+            const count = expBase.filter((j) => matchesExpFilter(j, f)).length;
+            const active = expFilter?.id === f.id;
+            return (
+              <button
+                key={f.id}
+                onClick={() => setExpFilter(active ? null : f)}
+                className={`rounded-full border px-3 py-1 text-sm transition ${
+                  active
+                    ? "border-emerald-600 bg-emerald-600 text-white"
+                    : "border-slate-300 text-slate-600 hover:border-slate-400 dark:border-slate-700 dark:text-slate-300"
+                }`}
+              >
+                {f.label} <span className="opacity-60">{count}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Posted-age and company dropdowns */}
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <select
+          value={maxAge ?? ""}
+          onChange={(e) => setMaxAge(e.target.value ? Number(e.target.value) : null)}
+          className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
+          title="Filter by how recently the job was posted"
+        >
+          <option value="">Posted: any time</option>
+          {AGE_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={companyFilter}
+          onChange={(e) => setCompanyFilter(e.target.value)}
+          className="max-w-[16rem] rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
+          title="Filter by company"
+        >
+          <option value="">All companies ({companies.length})</option>
+          {companies.map((c) => (
+            <option key={c.key} value={c.key}>
+              {c.name} ({c.count})
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Job list */}
