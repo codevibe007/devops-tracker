@@ -130,12 +130,27 @@ npm run dev                     # auto-copies ../data/jobs.json into public/
   combined with the active cloud tab.
 - Job cards with skill tags and a match-score badge (green ≥ 8, amber 6–8,
   dimmed < 6), plus **Apply / Mark applied / Ignore** buttons.
-- Applied/Ignored state persists in `localStorage` (static site, no backend).
+- **Application pipeline tracking** — every job card has stage chips
+  (📮 Applied → ✉️ Email Sent → 🎤 Interview → 🏆 Selected / 🚫 Rejected),
+  each showing how long the job has been in that stage. The **🎯 My
+  Pipeline** tab shows all tracked jobs as a kanban board with per-stage
+  columns and quick-move controls. State persists in `localStorage`.
 - Light/dark mode with a toggle (defaults to your system preference).
 - **Refresh** button (re-reads the latest data) and **Run radar now ↗**
-  link that opens the GitHub Actions page to trigger a fresh fetch.
-- **Owner mode** — the Run radar button is hidden by default and visible
-  only while the URL carries the `#owner` hash: bookmark
-  `https://<your-site>/#owner` and use that link yourself. Removing the
-  hash hides the button again. This is cosmetic: actually running the
-  workflow always requires GitHub write access.
+  link (admins only) that opens the GitHub Actions page.
+
+## Access control (login)
+
+The dashboard sits behind a login screen. Users live in
+`dashboard/public/users.json` as salted SHA-256 entries — no plaintext
+passwords in the repo.
+
+- **Admins** see the Run radar button and the 🔐 **Admin panel**, where
+  they can create users (member or admin) and change their own password.
+  The panel generates the updated `users.json`; paste it into the GitHub
+  edit page it links to, commit, and Netlify deploys the change in ~1 min.
+- **Members** can view, filter, and track jobs.
+
+> ⚠️ Honest scope: this is a static site, so the login is an access gate,
+> not vault-grade security — the repo and job data are public. Triggering
+> the radar workflow always requires GitHub write access regardless.

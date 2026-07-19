@@ -1,4 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+import { loadSession, clearSession } from "./auth.js";
+import Login from "./Login.jsx";
+import AdminPanel from "./AdminPanel.jsx";
+import Pipeline from "./Pipeline.jsx";
+import { STAGES, daysLabel } from "./stages.js";
 
 const TABS = [
   { id: "all", label: "All DevOps" },
@@ -6,6 +11,7 @@ const TABS = [
   { id: "aws", label: "AWS" },
   { id: "azure", label: "Azure" },
   { id: "noexp", label: "No Exp Listed" },
+  { id: "pipeline", label: "🎯 My Pipeline" },
 ];
 
 // Main tabs only show jobs whose stated experience overlaps 0-8 yrs;
@@ -74,19 +80,15 @@ const THEME_KEY = "radar-theme";
 const RUN_WORKFLOW_URL =
   "https://github.com/codevibe007/devops-tracker/actions/workflows/radar.yml";
 
-// Owner mode: the run-workflow shortcut is visible ONLY while the URL
-// carries the #owner hash (bookmark https://<site>/#owner). No persistence
-// — removing the hash hides the button again. Cosmetic gating: actually
-// running the workflow requires GitHub write access.
-function resolveOwner() {
-  // Clean up the flag older versions stored.
-  localStorage.removeItem("radar-owner");
-  return window.location.hash === "#owner";
-}
-
 function loadOverrides() {
+  // Migrate the old plain-string format ("applied") to {status, at}.
   try {
-    return JSON.parse(localStorage.getItem(STATUS_KEY)) || {};
+    const raw = JSON.parse(localStorage.getItem(STATUS_KEY)) || {};
+    const out = {};
+    for (const [id, val] of Object.entries(raw)) {
+      out[id] = typeof val === "string" ? { status: val, at: null } : val;
+    }
+    return out;
   } catch {
     return {};
   }
@@ -139,9 +141,9 @@ function StatCard({ label, value }) {
   );
 }
 
-function JobCard({ job, status, onSetStatus }) {
+function JobCard({ job, override, onSetStatus }) {
+  const status = override?.status || null;
   const ignored = status === "ignored";
-  const applied = status === "applied";
   return (
     <div
       className={`rounded-xl border border-slate-200 bg-white p-4 transition dark:border-slate-800 dark:bg-slate-900 ${
@@ -190,6 +192,8 @@ function JobCard({ job, status, onSetStatus }) {
         </div>
       )}
 
+      {/* Application tracking: click a stage to set it; click it again to
+          clear. The active stage shows how long the job has been in it. */}
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <a
           href={job.url}
@@ -199,36 +203,39 @@ function JobCard({ job, status, onSetStatus }) {
         >
           Apply
         </a>
-        {applied ? (
-          <button
-            onClick={() => onSetStatus(job.id, null)}
-            className="rounded-lg bg-emerald-100 px-3 py-1.5 text-sm font-medium text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300"
-          >
-            ✓ Applied — undo
-          </button>
-        ) : (
-          <button
-            onClick={() => onSetStatus(job.id, "applied")}
-            className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
-          >
-            Mark applied
-          </button>
-        )}
-        {ignored ? (
-          <button
-            onClick={() => onSetStatus(job.id, null)}
-            className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400"
-          >
-            Ignored — undo
-          </button>
-        ) : (
-          <button
-            onClick={() => onSetStatus(job.id, "ignored")}
-            className="rounded-lg px-3 py-1.5 text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
-          >
-            Ignore
-          </button>
-        )}
+        <span className="mx-1 hidden h-5 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
+        {STAGES.map((stage) => {
+          const active = status === stage.id;
+          return (
+            <button
+              key={stage.id}
+              onClick={() => onSetStatus(job.id, active ? null : stage.id)}
+              title={
+                active
+                  ? `${stage.label} for ${daysLabel(override?.at)} — click to clear`
+                  : `Mark as ${stage.label}`
+              }
+              className={`rounded-full border px-2.5 py-1 text-xs font-medium transition ${
+                active
+                  ? stage.active
+                  : "border-slate-300 text-slate-500 hover:border-slate-400 dark:border-slate-700 dark:text-slate-400"
+              }`}
+            >
+              {stage.emoji} {stage.label}
+              {active && override?.at ? ` · ${daysLabel(override.at)}` : ""}
+            </button>
+          );
+        })}
+        <button
+          onClick={() => onSetStatus(job.id, ignored ? null : "ignored")}
+          className={`rounded-full px-2.5 py-1 text-xs ${
+            ignored
+              ? "bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300"
+              : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+          }`}
+        >
+          {ignored ? "Ignored — undo" : "Ignore"}
+        </button>
       </div>
     </div>
   );
@@ -247,13 +254,9 @@ export default function App() {
     document.documentElement.classList.contains("dark")
   );
   const [refreshing, setRefreshing] = useState(false);
-  const [isOwner, setIsOwner] = useState(resolveOwner);
-
-  useEffect(() => {
-    const onHash = () => setIsOwner(resolveOwner());
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
-  }, []);
+  const [session, setSession] = useState(loadSession);
+  const [showAdmin, setShowAdmin] = useState(false);
+  const isAdmin = session?.role === "admin";
 
   const loadData = () => {
     setRefreshing(true);
@@ -280,7 +283,7 @@ export default function App() {
   const setStatus = (id, status) => {
     setOverrides((prev) => {
       const next = { ...prev };
-      if (status) next[id] = status;
+      if (status) next[id] = { status, at: new Date().toISOString() };
       else delete next[id];
       localStorage.setItem(STATUS_KEY, JSON.stringify(next));
       return next;
@@ -290,12 +293,21 @@ export default function App() {
   const jobs = useMemo(() => {
     const list = (data?.jobs || []).map((j) => ({
       ...j,
-      effectiveStatus: overrides[j.id] || j.status,
+      effectiveStatus: overrides[j.id]?.status || null,
     }));
     return list.sort((a, b) => b.score - a.score);
   }, [data, overrides]);
 
-  const tabJobs = useMemo(() => jobs.filter((j) => matchesTab(j, tab)), [jobs, tab]);
+  const trackedCount = useMemo(
+    () =>
+      jobs.filter((j) => j.effectiveStatus && j.effectiveStatus !== "ignored").length,
+    [jobs]
+  );
+
+  const tabJobs = useMemo(
+    () => (tab === "pipeline" ? [] : jobs.filter((j) => matchesTab(j, tab))),
+    [jobs, tab]
+  );
   const matchesCompany = (j) =>
     !companyFilter || (j.company || "").trim().toLowerCase() === companyFilter;
 
@@ -367,13 +379,16 @@ export default function App() {
 
   const stats = useMemo(() => {
     const newToday = tabJobs.filter((j) => isToday(j.created_at)).length;
-    const applied = tabJobs.filter((j) => j.effectiveStatus === "applied").length;
     const avg =
       tabJobs.length > 0
         ? (tabJobs.reduce((s, j) => s + (j.score || 0), 0) / tabJobs.length).toFixed(1)
         : "—";
-    return { newToday, total: tabJobs.length, applied, avg };
-  }, [tabJobs]);
+    return { newToday, total: tabJobs.length, tracked: trackedCount, avg };
+  }, [tabJobs, trackedCount]);
+
+  if (!session) {
+    return <Login onLogin={setSession} />;
+  }
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 text-slate-900 dark:text-slate-100">
@@ -396,7 +411,7 @@ export default function App() {
           >
             {refreshing ? "⏳ Refreshing…" : "🔄 Refresh"}
           </button>
-          {isOwner && (
+          {isAdmin && (
             <a
               href={RUN_WORKFLOW_URL}
               target="_blank"
@@ -407,6 +422,15 @@ export default function App() {
               ▶ Run radar now ↗
             </a>
           )}
+          {isAdmin && (
+            <button
+              onClick={() => setShowAdmin(true)}
+              className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-700"
+              title="Manage users"
+            >
+              🔐 Admin
+            </button>
+          )}
           <button
             onClick={() => setDark((d) => !d)}
             className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-700"
@@ -414,8 +438,35 @@ export default function App() {
           >
             {dark ? "☀️ Light" : "🌙 Dark"}
           </button>
+          <span
+            className="rounded-lg bg-slate-100 px-3 py-1.5 text-sm text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+            title={`Signed in as ${session.username} (${session.role})`}
+          >
+            👤 {session.username}
+          </span>
+          <button
+            onClick={() => {
+              clearSession();
+              setSession(null);
+            }}
+            className="rounded-lg px-2 py-1.5 text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+            title="Sign out"
+          >
+            Logout
+          </button>
         </div>
       </header>
+
+      {showAdmin && (
+        <AdminPanel session={session} onClose={() => setShowAdmin(false)} />
+      )}
+
+      {session.viaRecovery && (
+        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300">
+          🔑 You signed in with the <b>recovery password</b>. Consider setting a
+          new main password via 🔐 Admin → Change my password.
+        </div>
+      )}
 
       {error && (
         <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
@@ -426,7 +477,10 @@ export default function App() {
       {/* Cloud tabs */}
       <nav className="mt-6 flex flex-wrap gap-1 rounded-xl bg-slate-100 p-1 dark:bg-slate-900">
         {TABS.map((t) => {
-          const count = jobs.filter((j) => matchesTab(j, t.id)).length;
+          const count =
+            t.id === "pipeline"
+              ? trackedCount
+              : jobs.filter((j) => matchesTab(j, t.id)).length;
           const active = tab === t.id;
           return (
             <button
@@ -453,11 +507,15 @@ export default function App() {
         })}
       </nav>
 
+      {tab === "pipeline" ? (
+        <Pipeline jobs={jobs} overrides={overrides} onSetStatus={setStatus} />
+      ) : (
+        <>
       {/* Stat cards */}
       <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard label="New today" value={stats.newToday} />
         <StatCard label="Total tracked" value={stats.total} />
-        <StatCard label="Applied" value={stats.applied} />
+        <StatCard label="In my pipeline" value={stats.tracked} />
         <StatCard label="Avg match score" value={stats.avg} />
       </section>
 
@@ -541,7 +599,7 @@ export default function App() {
           <JobCard
             key={job.id}
             job={job}
-            status={job.effectiveStatus === "applied" || job.effectiveStatus === "ignored" ? job.effectiveStatus : null}
+            override={overrides[job.id] || null}
             onSetStatus={setStatus}
           />
         ))}
@@ -551,9 +609,12 @@ export default function App() {
           </div>
         )}
       </main>
+        </>
+      )}
 
       <footer className="mt-10 text-center text-xs text-slate-400 dark:text-slate-600">
-        Data refreshes daily at 8:00 AM IST via GitHub Actions · Apply/Ignore state is stored in your browser
+        Data refreshes daily at 8:00 AM IST via GitHub Actions · Application
+        tracking is stored in your browser
       </footer>
     </div>
   );
