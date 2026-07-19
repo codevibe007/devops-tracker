@@ -195,3 +195,35 @@ class TestNormalizeNaukri:
         job = radar.normalize_naukri(self._item(jobId="", id=""))
         assert job["id"].startswith("nk-")
         assert len(job["id"]) > 3
+
+    def test_experience_dict_shape(self):
+        job = radar.normalize_naukri(self._item(experience={"min": 3, "max": 6}))
+        assert job["experience"] == "3-6 yrs"
+
+    def test_experience_dict_open_ended(self):
+        job = radar.normalize_naukri(self._item(experience={"min": 5, "max": None}))
+        assert job["experience"] == "5+ yrs"
+
+    def test_experience_from_url_slug_fallback(self):
+        job = radar.normalize_naukri(
+            self._item(
+                experience=None,
+                portalUrl="https://www.naukri.com/job-listings-devops-acme-pune-0-to-3-years-220626503633",
+            )
+        )
+        assert job["experience"] == "0-3 yrs"
+
+    def test_backfill_from_url_slug(self):
+        import sqlite3 as sq
+
+        conn = sq.connect(":memory:")
+        conn.row_factory = sq.Row
+        conn.executescript(radar.SCHEMA)
+        conn.execute(
+            "INSERT INTO jobs (id, title, url, source, experience) VALUES "
+            "('nk-1', 'DevOps', "
+            "'https://www.naukri.com/job-listings-x-2-to-7-years-1', 'Naukri', '')"
+        )
+        radar.backfill_naukri_experience(conn)
+        row = conn.execute("SELECT experience FROM jobs WHERE id='nk-1'").fetchone()
+        assert row["experience"] == "2-7 yrs"

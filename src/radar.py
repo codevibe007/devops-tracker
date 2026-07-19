@@ -406,6 +406,28 @@ def _parse_naukri_date(value) -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+# Naukri job URLs embed the range as ".../...-0-to-3-years-<jobid>".
+_NAUKRI_URL_EXP_RE = re.compile(r"(\d{1,2})-to-(\d{1,2})-years")
+
+
+def _naukri_experience(item: dict, url: str) -> str:
+    """Experience label from the structured field, text, or the URL slug."""
+    value = item.get("experience")
+    if isinstance(value, dict):
+        lo, hi = value.get("min"), value.get("max")
+        if lo is not None and hi is not None:
+            return f"{lo}-{hi} yrs"
+        if lo is not None:
+            return f"{lo}+ yrs"
+    exp = extract_experience(_flat_text(value))
+    if exp:
+        return experience_label(exp)
+    m = _NAUKRI_URL_EXP_RE.search(url)
+    if m:
+        return f"{int(m.group(1))}-{int(m.group(2))} yrs"
+    return ""
+
+
 def normalize_naukri(item: dict) -> dict | None:
     """Map a raw Naukri listing onto the jobs schema.
 
@@ -426,8 +448,10 @@ def normalize_naukri(item: dict) -> dict | None:
     company = _flat_text(item.get("company") or item.get("companyName")).strip()
     description = _flat_text(item.get("description"))
     skills_raw = _flat_text(item.get("skills") or item.get("tags"))
-    exp_raw = _flat_text(item.get("experience"))
-    text = f"{title} {description} {skills_raw} {exp_raw}"
+    experience = _naukri_experience(item, url)
+    # Include the experience label so the experience scoring rules apply.
+    score_text = f"{description} {skills_raw} {experience}"
+    text = f"{title} {score_text}"
 
     job_id = _flat_text(item.get("jobId") or item.get("id")).strip()
     if not job_id:
@@ -441,12 +465,33 @@ def normalize_naukri(item: dict) -> dict | None:
         "url": url,
         "source": "Naukri",
         "posted_at": _parse_naukri_date(item.get("createdDate")),
-        "score": score_job(title, f"{description} {skills_raw} {exp_raw}"),
+        "score": score_job(title, score_text),
         "cloud_tags": tag_cloud(text),
         "skills": ",".join(extract_skills(text)),
-        "experience": experience_label(extract_experience(text)),
+        "experience": experience,
         "status": "new",
     }
+
+
+def backfill_naukri_experience(conn: sqlite3.Connection) -> None:
+    """One-off repair: fill empty experience on stored Naukri rows from
+    the URL slug (rows inserted before _naukri_experience existed)."""
+    rows = conn.execute(
+        "SELECT id, url FROM jobs WHERE source = 'Naukri' "
+        "AND (experience IS NULL OR experience = '')"
+    ).fetchall()
+    fixed = 0
+    for row in rows:
+        m = _NAUKRI_URL_EXP_RE.search(row["url"] or "")
+        if m:
+            conn.execute(
+                "UPDATE jobs SET experience = ? WHERE id = ?",
+                (f"{int(m.group(1))}-{int(m.group(2))} yrs", row["id"]),
+            )
+            fixed += 1
+    if fixed:
+        conn.commit()
+        log.info("Backfilled experience for %d Naukri jobs", fixed)
 
 
 # ---------------------------------------------------------------------------
@@ -601,6 +646,7 @@ def main() -> int:
         inserted = insert_new_jobs(conn, normalized)
         log.info("Inserted %d new jobs (deduped from %d)", len(inserted), len(normalized))
 
+    backfill_naukri_experience(conn)
     total = export_json(conn)
     log.info("Exported %d jobs to %s", total, JSON_PATH)
     conn.close()
