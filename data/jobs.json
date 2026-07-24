@@ -1,7 +1,970 @@
 {
-  "last_run": "2026-07-23T10:41:34.385129+00:00",
-  "total": 444,
+  "last_run": "2026-07-24T10:31:45.389043+00:00",
+  "total": 494,
   "jobs": [
+    {
+      "id": "EtpW_DuSv2AS5QXyAAAAAA==",
+      "title": "Experienced Infrastructure Engineer - (100% Remote)",
+      "company": "remote zest jobs",
+      "location": "Remote",
+      "url": "https://remotezest.up.railway.app/job/experienced-infrastructure-engineer-100-remote-1",
+      "source": "Remote Zest Jobs",
+      "posted_at": "2026-07-20T00:00:00.000Z",
+      "score": 9.0,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "ArgoCD",
+        "Python",
+        "Grafana"
+      ],
+      "experience": "4+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "-MOEsc2CKiONzQfMAAAAAA==",
+      "title": "DevOps Engineer - Cloud-Native CI/CD & Kubernetes Specialist",
+      "company": "Synechron Technologies",
+      "location": "Pune, Maharashtra",
+      "url": "https://apna.co/job/pune/devops-engineer-cloud-native-ci-cd-kubernetes-1284249160",
+      "source": "Apna Jobs",
+      "posted_at": "2026-07-23T00:00:00.000Z",
+      "score": 9.0,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "GitLab CI",
+        "Jenkins"
+      ],
+      "experience": "5+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "u6upkpaGaSuS7gCnAAAAAA==",
+      "title": "Walk-in || Devops Engineer",
+      "company": "LTM",
+      "location": "Pune, Maharashtra",
+      "url": "https://www.shine.com/jobs/walk-in-devops-engineer/ltm/19228352",
+      "source": "Shine",
+      "posted_at": "2026-07-18T00:00:00.000Z",
+      "score": 7.5,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "Helm",
+        "CI/CD"
+      ],
+      "experience": "4-8 yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "g9G_M3-A0jl2vYO8AAAAAA==",
+      "title": "Senior Azure Cloud and Hybrid Infrastructure Engineer",
+      "company": "PriceWaterhouseCoopers Pvt Ltd ( PWC )",
+      "location": "Hyderabad, Telangana",
+      "url": "https://apna.co/job/hyderabad/in-senior-associate-azure-cloud-hybrid-infrastruct-1639816089",
+      "source": "Apna Jobs",
+      "posted_at": "2026-07-23T00:00:00.000Z",
+      "score": 6.5,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "4-8 yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "OI0l0G_54KBwugljAAAAAA==",
+      "title": "reputed company & Virtualization Infrastructure Engineer",
+      "company": "remote zest jobs",
+      "location": "Remote",
+      "url": "https://remotezest.up.railway.app/job/reputed-company-virtualization-infrastructure-engineer-2",
+      "source": "Remote Zest Jobs",
+      "posted_at": "2026-07-21T00:00:00.000Z",
+      "score": 6.5,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Ansible",
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "3+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "8mHgITRepCXAZTvrAAAAAA==",
+      "title": "Infrastructure Engineer Specialist - WAF & DevSecOps Automation",
+      "company": "540006 Motorola Solutions Kodiak Networks India Private Limited",
+      "location": "Bengaluru, Karnataka",
+      "url": "https://motorolasolutions.wd5.myworkdayjobs.com/en-US/Careers/job/Bangalore-India/Infrastructure-Engineer---Networking---WAF-Specialist_R62324?timeType=14bb6aa2c25e4a218b2a3faaa951e44c",
+      "source": "Workday",
+      "posted_at": "2026-07-21T00:00:00.000Z",
+      "score": 6.0,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "Ansible",
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "10+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "cRpcvE3xotTWGEHDAAAAAA==",
+      "title": "Engineering Manager - Kubernetes Observability",
+      "company": "New Relic One India Pvt. Ltd.",
+      "location": "India",
+      "url": "https://apna.co/job/hyderabad/manager-software-engineering-1812201140",
+      "source": "Apna Jobs",
+      "posted_at": "2026-07-23T23:00:00.000Z",
+      "score": 6.0,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Kubernetes",
+        "Helm",
+        "Python",
+        "Prometheus"
+      ],
+      "experience": "8+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "syGFitYDqNB0f9IJAAAAAA==",
+      "title": "Lead Software Engineer DevOps Kubernetes Helm",
+      "company": "Blue Yonder",
+      "location": "India",
+      "url": "https://www.jobleads.com/in/job/lead-software-engineer-devops-kubernetes-helm--hyderabad--e6ffdf78e554285272da446c68af2f65e",
+      "source": "JobLeads",
+      "posted_at": "2026-07-23T00:00:00.000Z",
+      "score": 6.0,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "Helm",
+        "ArgoCD",
+        "GitHub Actions",
+        "Python"
+      ],
+      "experience": "8+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "-6y_y23JhnH24OCsAAAAAA==",
+      "title": "Senior IT Infrastructure Engineer",
+      "company": "Colt Technology Services India Private Limited",
+      "location": "Makali, Karnataka",
+      "url": "https://www.jobhai.com/hardware-network-engineer-senior-it-infrastructure-engineer-job-in-colt-technology-services-india-private-limited-makali-bangalore-5-to-6-plus-years-1784727617-8021603-jid",
+      "source": "Job Hai",
+      "posted_at": "2026-07-22T00:00:00.000Z",
+      "score": 5.5,
+      "cloud_tags": "gcp,azure",
+      "skills": [
+        "GCP",
+        "Azure",
+        "Kubernetes",
+        "Docker"
+      ],
+      "experience": "5-6 yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "jXcoxFEfFQhlLWM7AAAAAA==",
+      "title": "Sr. Infrastructure Engineer - Kubernetes",
+      "company": "remote zest jobs",
+      "location": "Remote",
+      "url": "https://remotezest.up.railway.app/job/sr-infrastructure-engineer-kubernetes",
+      "source": "Remote Zest Jobs",
+      "posted_at": "2026-07-22T00:00:00.000Z",
+      "score": 5.5,
+      "cloud_tags": "gcp,aws",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Kubernetes",
+        "Grafana"
+      ],
+      "experience": "5+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "WPynsHNDHtPUByPcAAAAAA==",
+      "title": "Technical Specialist - DevOps, Python, Kubernetes",
+      "company": "HCLTech",
+      "location": "India",
+      "url": "https://www.simplyhired.co.in/job/pfg1Br8Jap6Ai0fyBEneeok0Ra4CMph1ti6zzXU0y3W5zUOhLW3ipw",
+      "source": "SimplyHired",
+      "posted_at": "2026-07-22T00:00:00.000Z",
+      "score": 5.0,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Kubernetes",
+        "Docker",
+        "Jenkins",
+        "Ansible",
+        "Python"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "wWEmAuCeUxWtq791AAAAAA==",
+      "title": "Cloud Devops Engineer   Kubernetes & Azure Specialist Pune (India)",
+      "company": "ScaleneWorks",
+      "location": "Pune, Maharashtra",
+      "url": "https://www.shine.com/jobs/cloud-devops-engineer-kubernetes-azure-specialist-pune-india/scaleneworks/19248961",
+      "source": "Shine",
+      "posted_at": "2026-07-22T00:00:00.000Z",
+      "score": 4.5,
+      "cloud_tags": "aws,azure",
+      "skills": [
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "GitLab CI",
+        "CI/CD"
+      ],
+      "experience": "5+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "PBnpoCismXuWl4dMAAAAAA==",
+      "title": "Backend Java Developer (Java, Cloud, Kubernetes) - Senior Engineer IRC295980",
+      "company": "Hitachi Careers",
+      "location": "Pune, Maharashtra",
+      "url": "https://careers.hitachi.com/jobs/18007032-backend-java-developer-java-cloud-kubernetes-senior-engineer-irc295980",
+      "source": "Hitachi Careers",
+      "posted_at": "2026-07-17T00:00:00.000Z",
+      "score": 4.5,
+      "cloud_tags": "gcp,aws",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Kubernetes",
+        "Docker"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "8VEmJb2UgYApzjTVAAAAAA==",
+      "title": "Environment Infrastructure Engineer",
+      "company": "Salesforce.com India Private Limited",
+      "location": "Pashamylaram, Telangana",
+      "url": "https://www.jobhai.com/hardware-network-engineer-environment-infrastructure-engineer-job-in-salesforce-com-india-private-limited-pashamailaram-hyderabad-5-to-6-plus-years-1784651356-7998219-jid",
+      "source": "Job Hai",
+      "posted_at": "2026-07-21T00:00:00.000Z",
+      "score": 4.0,
+      "cloud_tags": "none",
+      "skills": [
+        "Terraform",
+        "GitHub Actions",
+        "Jenkins",
+        "Ansible",
+        "CI/CD"
+      ],
+      "experience": "5-6 yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "bV1LP8IfkVFQEx4_AAAAAA==",
+      "title": "Lead Infrastructure Automation Engineer",
+      "company": "Northern Trust",
+      "location": "Pune, Maharashtra",
+      "url": "https://apna.co/job/pune/lead-infra-automation-1920440157",
+      "source": "Apna Jobs",
+      "posted_at": "2026-07-23T00:00:00.000Z",
+      "score": 3.5,
+      "cloud_tags": "none",
+      "skills": [
+        "Terraform",
+        "Ansible",
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "8-12 yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "yQZKxcouwSkPpk7FAAAAAA==",
+      "title": "Infrastructure Engineer, AVP",
+      "company": "NatWest Group",
+      "location": "Bengaluru, Karnataka",
+      "url": "https://www.forcesfamiliesjobs.co.uk/jobs/infrastructure-engineer-avp-bangalore/2809300-1/",
+      "source": "Forces Families Jobs",
+      "posted_at": "2026-07-23T17:00:00.000Z",
+      "score": 3.5,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Python"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "aV9Glf14cblNz3PPAAAAAA==",
+      "title": "ML Infrastructure Engineer (Staff / reputed company)",
+      "company": "remote zest jobs",
+      "location": "Remote",
+      "url": "https://remotezest.up.railway.app/job/ml-infrastructure-engineer-staff-reputed-company",
+      "source": "Remote Zest Jobs",
+      "posted_at": "2026-07-22T00:00:00.000Z",
+      "score": 3.5,
+      "cloud_tags": "none",
+      "skills": [
+        "Terraform",
+        "Kubernetes"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "WTohU4wRS2UFXcRQAAAAAA==",
+      "title": "Manager_AWS/Kubernetes Engineer(IAC,Terraform,CI/CD,GitHub,Linux_Pune",
+      "company": "Vodafone",
+      "location": "Pune, Maharashtra",
+      "url": "https://in.jobrapido.com/jobpreview/8269122437174525952",
+      "source": "Jobrapido.com",
+      "posted_at": "2026-07-21T00:00:00.000Z",
+      "score": 3.0,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "Jenkins",
+        "Ansible",
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "e-vzW-k0eIWtRPAXAAAAAA==",
+      "title": "Principal Infrastructure Engineer (Linux Expert)",
+      "company": "Keyloop",
+      "location": "Hyderabad, Telangana",
+      "url": "https://in.linkedin.com/jobs/view/principal-infrastructure-engineer-linux-expert-at-keyloop-4444483075",
+      "source": "LinkedIn",
+      "posted_at": "2026-07-23T16:00:00.000Z",
+      "score": 2.5,
+      "cloud_tags": "aws,azure",
+      "skills": [
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "Ansible"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "OAq95PRgyHGk1k_pAAAAAA==",
+      "title": "Principal Engineer \u2014 Virtualization & Kubernetes (Pune)",
+      "company": "Commvault",
+      "location": "Pune, Maharashtra",
+      "url": "https://in.jobrapido.com/jobpreview/7243349556715323392",
+      "source": "Jobrapido.com",
+      "posted_at": "2026-07-20T00:00:00.000Z",
+      "score": 2.5,
+      "cloud_tags": "none",
+      "skills": [
+        "Kubernetes"
+      ],
+      "experience": "8+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "CmtPPNivM_aMHg1cAAAAAA==",
+      "title": "Azure Infrastructure Engineer",
+      "company": "Itc Infotech India",
+      "location": "Pune, Maharashtra",
+      "url": "https://in.jooble.org/jdp/8692461075498503601",
+      "source": "Jooble",
+      "posted_at": "2026-07-21T00:00:00.000Z",
+      "score": 2.0,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure",
+        "Terraform"
+      ],
+      "experience": "5+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "U_gp7A9ZniZIrlqYAAAAAA==",
+      "title": "Lead Infrastructure Engineer - GenAI and Cloud Cost Optimization",
+      "company": "JP Morgan Services India Pvt Ltd",
+      "location": "Hyderabad, Telangana",
+      "url": "https://apna.co/job/hyderabad/lead-infrastructure-engineer-genai-cloudformation-1963937984",
+      "source": "Apna Jobs",
+      "posted_at": "2026-07-23T00:00:00.000Z",
+      "score": 2.0,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS",
+        "Terraform"
+      ],
+      "experience": "5+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "VSEAQbP_RcSKe43rAAAAAA==",
+      "title": "DevOps Engineer | Cloud-Native CI/CD (Pune)",
+      "company": "Synechron",
+      "location": "Pune, Maharashtra",
+      "url": "https://in.jobrapido.com/jobpreview/675931694515093504",
+      "source": "Jobrapido.com",
+      "posted_at": "2026-07-23T00:00:00.000Z",
+      "score": 2.0,
+      "cloud_tags": "none",
+      "skills": [
+        "Kubernetes",
+        "Docker",
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "_HcJRdxjGiOvK1OCAAAAAA==",
+      "title": "Kubernetes Admin Engineer (Hyderabad)",
+      "company": "People Prime Worldwide",
+      "location": "India",
+      "url": "https://in.jobrapido.com/jobpreview/4384230372259397632",
+      "source": "Jobrapido.com",
+      "posted_at": "2026-07-23T23:00:00.000Z",
+      "score": 2.0,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS",
+        "Kubernetes",
+        "Python"
+      ],
+      "experience": "7-10 yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "16aP7gvO0ZD4Mf3OAAAAAA==",
+      "title": "Java Infrastructure Engineer (Pune)",
+      "company": "Finastra Technology",
+      "location": "Pune, Maharashtra",
+      "url": "https://in.jobrapido.com/jobpreview/4769754608207659008",
+      "source": "Jobrapido.com",
+      "posted_at": "2026-07-21T00:00:00.000Z",
+      "score": 1.5,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure",
+        "Kubernetes",
+        "Docker",
+        "Prometheus",
+        "CI/CD"
+      ],
+      "experience": "4+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "uf7gCFCm1ZD7ndyuAAAAAA==",
+      "title": "Lead Infrastructure Engineer - Network Operations Subject Matter Expert",
+      "company": "JP Morgan Services India Pvt Ltd",
+      "location": "Hyderabad, Telangana",
+      "url": "https://apna.co/job/hyderabad/lead-infrastructure-engineer-network-operation-sme-1800082535",
+      "source": "Apna Jobs",
+      "posted_at": "2026-07-23T00:00:00.000Z",
+      "score": 1.5,
+      "cloud_tags": "none",
+      "skills": [
+        "Ansible",
+        "Python"
+      ],
+      "experience": "7+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "JaLkBIcUiCfQa33uAAAAAA==",
+      "title": "Senior Infrastructure Network Engineer",
+      "company": "Jp Morgan Services India Private Limited",
+      "location": "Hyderabad, Telangana",
+      "url": "https://www.jobhai.com/hardware-network-engineer-senior-infrastructure-network-engineer-job-in-jp-morgan-services-india-private-limited-rajiv-gandhi-international-airport-hyderabad-3-to-6-plus-years-1784651403-7998960-jid",
+      "source": "Job Hai",
+      "posted_at": "2026-07-21T00:00:00.000Z",
+      "score": 1.5,
+      "cloud_tags": "none",
+      "skills": [
+        "Ansible",
+        "Python"
+      ],
+      "experience": "3-6 yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "_ecINsp0qVdrUgK_AAAAAA==",
+      "title": "Audio Visual Infrastructure Engineer (Hyderabad)",
+      "company": "eos",
+      "location": "Hyderabad, Telangana",
+      "url": "https://www.shine.com/jobs/audio-visual-infrastructure-engineer-hyderabad/eos/19249022",
+      "source": "Shine",
+      "posted_at": "2026-07-22T00:00:00.000Z",
+      "score": 1.5,
+      "cloud_tags": "none",
+      "skills": [
+        "Ansible",
+        "Python"
+      ],
+      "experience": "4+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "P4ohk-r4Ye-x9jafAAAAAA==",
+      "title": "Infrastructure Engineer 2",
+      "company": "Arrow Electronics",
+      "location": "Bengaluru, Karnataka",
+      "url": "https://www.shine.com/jobs/infrastructure-engineer-2/arrow-electronics/19264956",
+      "source": "Shine",
+      "posted_at": "2026-07-23T00:00:00.000Z",
+      "score": 1.5,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure",
+        "Kubernetes",
+        "CI/CD"
+      ],
+      "experience": "8+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "XrBkeAgbtEQEuo8rAAAAAA==",
+      "title": "Lead Infrastructure Engineer- Network Security & Automation - JPMorganChase",
+      "company": "OpenTalent",
+      "location": "Remote",
+      "url": "https://www.opentalent.in/jobs/lead-infrastructure-engineer-network-security-and-automation-jpmorganchase",
+      "source": "OpenTalent",
+      "posted_at": "2026-07-21T00:00:00.000Z",
+      "score": 1.5,
+      "cloud_tags": "none",
+      "skills": [
+        "Ansible",
+        "Python"
+      ],
+      "experience": "7+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "TXivUc9E9cz9b5VgAAAAAA==",
+      "title": "Java Engineer IC(Core Java, Microservices Kubernetes)/Associate Director",
+      "company": "HSBC",
+      "location": "Remote",
+      "url": "https://www.bayt.com/en/india/jobs/java-engineer-ic-core-java-microservices-kubernetes-associate-director-74902960/",
+      "source": "Bayt.com",
+      "posted_at": "2026-07-18T00:00:00.000Z",
+      "score": 1.5,
+      "cloud_tags": "none",
+      "skills": [
+        "Kubernetes"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "DwSBHRiZZJP9_CcwAAAAAA==",
+      "title": "Java Engineer IC(Core Java, Microservices Kubernetes)/Associate Director",
+      "company": "HSBC Global Services Limited",
+      "location": "Pune, Maharashtra",
+      "url": "https://in.jooble.org/jdp/-772116092244197931",
+      "source": "Jooble",
+      "posted_at": "2026-07-17T00:00:00.000Z",
+      "score": 1.5,
+      "cloud_tags": "none",
+      "skills": [
+        "Kubernetes"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "FoyLBB4z1ASMSZi0AAAAAA==",
+      "title": "Data and Infrastructure Engineer",
+      "company": "SLB",
+      "location": "Pune, Maharashtra",
+      "url": "https://apply.slb.com/careers/job/563499733000474-data-and-infrastructure-engineer-pune-india?domain=slb.com",
+      "source": "Careers At SLB",
+      "posted_at": "2026-07-20T00:00:00.000Z",
+      "score": 1.0,
+      "cloud_tags": "none",
+      "skills": [],
+      "experience": "3-5 yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "-14to5qMbjcTA7zLAAAAAA==",
+      "title": "Data and Infrastructure Engineer (Pune)",
+      "company": "Schlumberger",
+      "location": "Pune, Maharashtra",
+      "url": "https://in.jobrapido.com/jobpreview/4076059528104247296",
+      "source": "Jobrapido.com",
+      "posted_at": "2026-07-21T00:00:00.000Z",
+      "score": 1.0,
+      "cloud_tags": "none",
+      "skills": [],
+      "experience": "3-5 yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "ykbEePjb3xSMuZYXAAAAAA==",
+      "title": "Lead Infrastructure Engineer",
+      "company": "remote zest jobs",
+      "location": "Remote",
+      "url": "https://remotezest.up.railway.app/job/lead-infrastructure-engineer-12",
+      "source": "Remote Zest Jobs",
+      "posted_at": "2026-07-21T00:00:00.000Z",
+      "score": 1.0,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure",
+        "Terraform",
+        "Ansible"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "IsLkMF32DP_-KB7rAAAAAA==",
+      "title": "Senior Lead Infrastructure Engineer",
+      "company": "JP Morgan Services India Pvt Ltd",
+      "location": "Bengaluru, Karnataka",
+      "url": "https://apna.co/job/bengaluru/senior-lead-infrastructure-engineer-cisco-call-man-1117230746",
+      "source": "Apna Jobs",
+      "posted_at": "2026-07-23T00:00:00.000Z",
+      "score": 0.5,
+      "cloud_tags": "aws,azure",
+      "skills": [
+        "AWS",
+        "Azure",
+        "Python"
+      ],
+      "experience": "5+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "MzBEBRnD5InCLE77AAAAAA==",
+      "title": "Lead Network Infrastructure Engineer",
+      "company": "JP Morgan Services India Pvt Ltd",
+      "location": "Bengaluru, Karnataka",
+      "url": "https://apna.co/job/bengaluru/lead-infrastructure-engineer-network-1873665879",
+      "source": "Apna Jobs",
+      "posted_at": "2026-07-23T00:00:00.000Z",
+      "score": 0.5,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS",
+        "Ansible",
+        "Python"
+      ],
+      "experience": "5+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "2XsDtkv4PnvlC4CnAAAAAA==",
+      "title": "Senior Linux & VoIP Infrastructure Engineer \u2013 100% Remote \u2013 4h / day",
+      "company": "remote click jobs",
+      "location": "Remote",
+      "url": "https://remoteclickjobs-production.up.railway.app/job/senior-linux-voip-infrastructure-engineer-100-remote-4h-day-1",
+      "source": "Remote Click Jobs",
+      "posted_at": "2026-07-22T00:00:00.000Z",
+      "score": 0.5,
+      "cloud_tags": "none",
+      "skills": [
+        "Ansible",
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "SHIF8fTOl7aW2CQ3AAAAAA==",
+      "title": "Lead Infrastructure Engineer - Network and IP Architecture Specialist",
+      "company": "Mphasis Ltd",
+      "location": "Pune, Maharashtra",
+      "url": "https://apna.co/job/pune/lead-infrastr-engineer-1133153948",
+      "source": "Apna Jobs",
+      "posted_at": "2026-07-22T00:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "aws,azure",
+      "skills": [
+        "AWS",
+        "Azure"
+      ],
+      "experience": "8+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "uZlTlzVNo1T5EQZXAAAAAA==",
+      "title": "Infrastructure Engineer VP (Pune Division)",
+      "company": "Barclays",
+      "location": "Pune, Maharashtra",
+      "url": "https://in.jobrapido.com/jobpreview/5737361949167976448",
+      "source": "Jobrapido.com",
+      "posted_at": "2026-07-23T00:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "none",
+      "skills": [],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "RUHTNvGa-cQKGyaqAAAAAA==",
+      "title": "Principal Cloud Infrastructure Engineer",
+      "company": "Mastercard",
+      "location": "Pune, Maharashtra",
+      "url": "https://careers.mastercard.com/us/en/job/R-281637/Principal-Cloud-Infrastructure-Engineer",
+      "source": "Mastercard",
+      "posted_at": "2026-07-21T00:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure",
+        "CI/CD"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "uq8HJdbrrWXCBphKAAAAAA==",
+      "title": "Windows Infrastructure Engineer",
+      "company": "Genpact",
+      "location": "Hyderabad, Telangana",
+      "url": "https://in.linkedin.com/jobs/view/windows-infrastructure-engineer-at-genpact-4440416985",
+      "source": "LinkedIn",
+      "posted_at": "2026-07-21T00:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "aws,azure",
+      "skills": [
+        "AWS",
+        "Azure"
+      ],
+      "experience": "5-10 yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "TDD507rD4C9jtYL3AAAAAA==",
+      "title": "SaaS Infrastructure Engineer, VP",
+      "company": "State Street",
+      "location": "Hyderabad, Telangana",
+      "url": "https://careers.statestreet.com/global/en/job/STSTGLOBALR793880EXTERNALENGLOBAL/SaaS-Infrastructure-Engineer-VP",
+      "source": "State Street Careers",
+      "posted_at": "2026-07-22T00:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure"
+      ],
+      "experience": "5+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "IvI5jf3wWd2nFZLOAAAAAA==",
+      "title": "Global Infrastructure Engineer",
+      "company": "Iq--e",
+      "location": "Hyderabad, Telangana",
+      "url": "https://www.shine.com/jobs/global-infrastructure-engineer/iq-e/19243588",
+      "source": "Shine",
+      "posted_at": "2026-07-21T00:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure"
+      ],
+      "experience": "3+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "IGShmT0shGGTLPF_AAAAAA==",
+      "title": "Senior IT Infrastructure Engineer - Microscope Systems",
+      "company": "Thermo Fisher Scientific India Private Limited",
+      "location": "Bengaluru, Karnataka",
+      "url": "https://www.jobhai.com/hardware-network-engineer-senior-it-infrastructure-engineer-microscope-systems-job-in-thermo-fisher-scientific-india-private-limited-nelamangala-bangalore-6-plus-0-years-1784727414-8018096-jid",
+      "source": "Job Hai",
+      "posted_at": "2026-07-22T00:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "none",
+      "skills": [],
+      "experience": "10-15 yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "4x72RkSeDkmdamRlAAAAAA==",
+      "title": "Lead: Infrastructure Engineer (AWS) (Bengaluru)",
+      "company": "Referrals Only",
+      "location": "Bengaluru, Karnataka",
+      "url": "https://in.jobrapido.com/jobpreview/7738178442604052480",
+      "source": "Jobrapido.com",
+      "posted_at": "2026-07-23T23:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS"
+      ],
+      "experience": "30+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "iLSGcrssTlwb86M3AAAAAA==",
+      "title": "Lead Infrastructure Engineer (JAMF, Entra, M365)",
+      "company": "8001 Clarivate Analytics India Private Limited",
+      "location": "Remote",
+      "url": "https://clarivate.wd3.myworkdayjobs.com/en-US/Clarivate_Careers/job/Lead-Infrastructure-Engineer--JAMF--Entra--M365-_JREQ135688",
+      "source": "Workday",
+      "posted_at": "2026-07-18T00:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "wpcub0Y-gJjYMc06AAAAAA==",
+      "title": "Lead IT Infrastructure Engineer, Virtual Desktop",
+      "company": "remote zest jobs",
+      "location": "Remote",
+      "url": "https://remotezest.up.railway.app/job/lead-it-infrastructure-engineer-virtual-desktop-1",
+      "source": "Remote Zest Jobs",
+      "posted_at": "2026-07-22T00:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure"
+      ],
+      "experience": "3+ yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "nk-230726500083",
+      "title": "Strategic Cloud Engineer, Data Analytics",
+      "company": "Google",
+      "location": "Hyderabad",
+      "url": "https://www.naukri.com/job-listings-strategic-cloud-engineer-data-analytics-google-india-private-limited-hyderabad-0-to-1-years-230726500083",
+      "source": "Naukri",
+      "posted_at": "2026-07-23T06:26:14+00:00",
+      "score": 0.0,
+      "cloud_tags": "none",
+      "skills": [],
+      "experience": "0-1 yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
+    {
+      "id": "nk-280423501300",
+      "title": "Cloud Engineer - Freshers",
+      "company": "Pragma Edge Software Services",
+      "location": "Hyderabad",
+      "url": "https://www.naukri.com/job-listings-cloud-engineer-freshers-pragma-edge-software-services-private-limited-hyderabad-0-to-2-years-280423501300",
+      "source": "Naukri",
+      "posted_at": "2023-04-28T16:18:05+00:00",
+      "score": 0.0,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS"
+      ],
+      "experience": "0-2 yrs",
+      "status": "new",
+      "created_at": "2026-07-24T10:31:42.668947+00:00"
+    },
     {
       "id": "_ilbvuz1CynlhPQpAAAAAA==",
       "title": "Lead DevOps/SRE",
