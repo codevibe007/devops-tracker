@@ -1,7 +1,39 @@
 {
-  "last_run": "2026-08-03T13:28:01.606414+00:00",
-  "total": 965,
+  "last_run": "2026-08-04T11:36:00.854202+00:00",
+  "total": 967,
   "jobs": [
+    {
+      "id": "nk-040826921569",
+      "title": "Software Engineer",
+      "company": "Nokia",
+      "location": "Bengaluru",
+      "url": "https://www.naukri.com/job-listings-software-engineer-nokia-solutions-and-networks-india-p-ltd-bengaluru-0-to-5-years-040826921569",
+      "source": "Naukri",
+      "posted_at": "2026-08-04T09:36:48.361000+00:00",
+      "score": 0.0,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure"
+      ],
+      "experience": "0-5 yrs",
+      "status": "new",
+      "created_at": "2026-08-04T11:36:00.622075+00:00"
+    },
+    {
+      "id": "nk-030826503863",
+      "title": "DevOps Engineer (Intern)",
+      "company": "Pjsofttech",
+      "location": "Pune",
+      "url": "https://www.naukri.com/job-listings-devops-engineer-intern-pjsofttech-pvt-ltd-pune-0-to-1-years-030826503863",
+      "source": "Naukri",
+      "posted_at": "2026-08-04T11:36:00.619384+00:00",
+      "score": 0.0,
+      "cloud_tags": "none",
+      "skills": [],
+      "experience": "0-1 yrs",
+      "status": "new",
+      "created_at": "2026-08-04T11:36:00.622075+00:00"
+    },
     {
       "id": "UURqSlBWcmlNTGJoZGlNNEFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBTV3BJYUVsNWN6TTRSMVp5VjNWa2VTMW9Xamx2T1dsR1pISnVja1pOVW01R1pIaG9VM1I0TmxONGFFOW1aRTlwVVhKbVJ6aFhWRFk0UlZGak1tcGpXRmxaWjI5SVFuWkZjMVZxV1d0cFIyUTJTMDFCUkV0aFptVkNjRU5IU1c5d1lXRkVhVVZsYW5sc2JsUnVReTFmUjI5aU1XOVFOVTlXWVZwMVFtUXRkMDlGVHpKMmRGSVNGMDgxWkhkaGNXSmFUVWxxVEd0UVNWQm9kbDlNYlVFNEdpSkJSSE55T1daUlNVWm5abXhWZVZkNmVqZzJXVlpKTVZGWWRsUXlTa0Z2VkhGQg",
       "title": "Cloud Ops Engineer (Cloud, Devops & Kubernetes)",
