@@ -1,7 +1,57 @@
 {
-  "last_run": "2026-08-07T06:52:53.438619+00:00",
-  "total": 1100,
+  "last_run": "2026-08-08T05:15:56.954744+00:00",
+  "total": 1103,
   "jobs": [
+    {
+      "id": "nk-070826032608",
+      "title": "DevOps Engineer - II/III",
+      "company": "Highradius",
+      "location": "Hyderabad",
+      "url": "https://www.naukri.com/job-listings-devops-engineer-ii-iii-highradius-hyderabad-0-to-0-years-070826032608",
+      "source": "Naukri",
+      "posted_at": "2026-08-07T12:06:43.379000+00:00",
+      "score": 0.0,
+      "cloud_tags": "none",
+      "skills": [
+        "Grafana"
+      ],
+      "experience": "0-0 yrs",
+      "status": "new",
+      "created_at": "2026-08-08T05:15:56.480332+00:00"
+    },
+    {
+      "id": "nk-070826930672",
+      "title": "Lead Full Stack Engineer- GO , Python",
+      "company": "Optum",
+      "location": "Hyderabad",
+      "url": "https://www.naukri.com/job-listings-lead-full-stack-engineer-go-python-optum-global-solutions-india-private-limited-hyderabad-0-to-1-years-070826930672",
+      "source": "Naukri",
+      "posted_at": "2026-08-07T11:46:35.057000+00:00",
+      "score": 0.0,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure",
+        "Python"
+      ],
+      "experience": "0-1 yrs",
+      "status": "new",
+      "created_at": "2026-08-08T05:15:56.480332+00:00"
+    },
+    {
+      "id": "nk-070826909448",
+      "title": "Cloud Observability Administrator",
+      "company": "ZS",
+      "location": "Pune",
+      "url": "https://www.naukri.com/job-listings-cloud-observability-administrator-zs-associates-india-pvt-ltd-pune-0-to-3-years-070826909448",
+      "source": "Naukri",
+      "posted_at": "2026-08-07T04:43:24.539000+00:00",
+      "score": 0.0,
+      "cloud_tags": "none",
+      "skills": [],
+      "experience": "0-3 yrs",
+      "status": "new",
+      "created_at": "2026-08-08T05:15:56.480332+00:00"
+    },
     {
       "id": "TmxWTl9lSnUtUHkxd29YZkFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBTbEZ2U2twTGMxZzRXWGhmYTFSblNVaERSbnBGWDJ4SVRtOXpMVU14UVZZNWMwRndibVZhYzJadk5rTm1iazVJZEdOMVFtSTRhMFJpU1doeVpIQmhjMFpLWW05MldtaEJRek5CVFRSR1h6UkhTM1Z5YWxOcFgwOHRjRUkxYzJWQ1JYUTNXVXAxYW1wS2RYbGxZWHBvUnpoNFFVcHVjRzF1TUc5MVYwTjZNbXR2Wm5RNVdqUVNGMlUwUWpGaGRHazRRMGwxYUhGMGMxQXhPV2xEY1VGckdpSkJSSE55T1daVWExVkdjRTVMTmxoWWRWQlpTRW94VUU4emEyVk5NMUpYY2xsUg",
       "title": "Specialist, Solutions Architecture (Kubernetes Engineer)",
