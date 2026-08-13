@@ -4,6 +4,7 @@ import Login from "./Login.jsx";
 import AdminPanel from "./AdminPanel.jsx";
 import Pipeline from "./Pipeline.jsx";
 import IgnoredList from "./IgnoredList.jsx";
+import Backup from "./Backup.jsx";
 import { STAGES, daysLabel } from "./stages.js";
 
 const TABS = [
@@ -273,6 +274,7 @@ export default function App() {
   const [refreshing, setRefreshing] = useState(false);
   const [session, setSession] = useState(loadSession);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [showBackup, setShowBackup] = useState(false);
   const isAdmin = session?.role === "admin";
 
   const loadData = () => {
@@ -531,6 +533,13 @@ export default function App() {
             </button>
           )}
           <button
+            onClick={() => setShowBackup(true)}
+            className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-700"
+            title="Back up or restore your job tracking"
+          >
+            💾 Backup
+          </button>
+          <button
             onClick={() => setDark((d) => !d)}
             className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-700"
             title="Toggle light/dark mode"
@@ -558,6 +567,13 @@ export default function App() {
 
       {showAdmin && (
         <AdminPanel session={session} onClose={() => setShowAdmin(false)} />
+      )}
+
+      {showBackup && (
+        <Backup
+          onClose={() => setShowBackup(false)}
+          onRestored={() => setOverrides(loadOverrides())}
+        />
       )}
 
       {session.viaRecovery && (
