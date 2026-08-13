@@ -1,13 +1,21 @@
 name: Deploy dashboard (GitHub Pages)
 
 on:
-  # Redeploy whenever the dashboard code or the exported data changes.
+  # Redeploy whenever the dashboard code changes (manual pushes / merges).
   push:
     branches: [main]
     paths:
       - "dashboard/**"
-      - "data/jobs.json"
       - ".github/workflows/deploy.yml"
+  # The daily radar commits data using the built-in GITHUB_TOKEN, whose
+  # pushes deliberately do NOT trigger other workflows — so a plain `push`
+  # trigger on data/jobs.json would never fire for the automated run.
+  # workflow_run chains off the radar's completion instead, regardless of
+  # how the radar was triggered (schedule or manual), so fresh jobs always
+  # publish.
+  workflow_run:
+    workflows: ["Job Radar (daily)"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
