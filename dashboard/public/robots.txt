@@ -1,0 +1,4 @@
+# This is a personal job-tracking tool, not a public job board.
+# Ask search engines not to index it or its data feed.
+User-agent: *
+Disallow: /

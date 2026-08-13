@@ -3,6 +3,7 @@ import { loadSession, clearSession } from "./auth.js";
 import Login from "./Login.jsx";
 import AdminPanel from "./AdminPanel.jsx";
 import Pipeline from "./Pipeline.jsx";
+import IgnoredList from "./IgnoredList.jsx";
 import { STAGES, daysLabel } from "./stages.js";
 
 const TABS = [
@@ -12,7 +13,11 @@ const TABS = [
   { id: "azure", label: "Azure" },
   { id: "noexp", label: "No Exp Listed" },
   { id: "pipeline", label: "🎯 My Pipeline" },
+  { id: "ignored", label: "🚫 Ignored" },
 ];
+
+// Views that render their own layout instead of the filtered job list.
+const CUSTOM_TABS = new Set(["pipeline", "ignored"]);
 
 // Main tabs only show jobs whose stated experience overlaps 0-8 yrs;
 // postings that don't state experience live in the "No Exp Listed" tab.
@@ -51,6 +56,25 @@ const AGE_OPTIONS = [
   { value: 15, label: "Last 15 days" },
   { value: 30, label: "Last 30 days" },
 ];
+
+const SORT_OPTIONS = [
+  { id: "newest", label: "Newest first" },
+  { id: "score", label: "Best match first" },
+];
+
+function postedTime(job) {
+  const t = new Date(job.posted_at || "").getTime();
+  return Number.isNaN(t) ? 0 : t;
+}
+
+function compareJobs(a, b, sortBy) {
+  // Ties fall back to the other dimension so ordering stays stable and
+  // meaningful (same-day posts rank by score, equal scores by recency).
+  if (sortBy === "newest") {
+    return postedTime(b) - postedTime(a) || b.score - a.score;
+  }
+  return b.score - a.score || postedTime(b) - postedTime(a);
+}
 
 function postedDaysAgo(job) {
   const t = new Date(job.posted_at || "").getTime();
@@ -143,13 +167,8 @@ function StatCard({ label, value }) {
 
 function JobCard({ job, override, onSetStatus }) {
   const status = override?.status || null;
-  const ignored = status === "ignored";
   return (
-    <div
-      className={`rounded-xl border border-slate-200 bg-white p-4 transition dark:border-slate-800 dark:bg-slate-900 ${
-        ignored ? "opacity-40" : ""
-      }`}
-    >
+    <div className="rounded-xl border border-slate-200 bg-white p-4 transition dark:border-slate-800 dark:bg-slate-900">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="truncate font-semibold text-slate-900 dark:text-slate-100">
@@ -209,7 +228,7 @@ function JobCard({ job, override, onSetStatus }) {
           return (
             <button
               key={stage.id}
-              onClick={() => onSetStatus(job.id, active ? null : stage.id)}
+              onClick={() => onSetStatus(job.id, active ? null : stage.id, job)}
               title={
                 active
                   ? `${stage.label} for ${daysLabel(override?.at)} — click to clear`
@@ -227,14 +246,11 @@ function JobCard({ job, override, onSetStatus }) {
           );
         })}
         <button
-          onClick={() => onSetStatus(job.id, ignored ? null : "ignored")}
-          className={`rounded-full px-2.5 py-1 text-xs ${
-            ignored
-              ? "bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300"
-              : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
-          }`}
+          onClick={() => onSetStatus(job.id, "ignored", job)}
+          title="Hide this job — it moves to the Ignored tab"
+          className="rounded-full px-2.5 py-1 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
         >
-          {ignored ? "Ignored — undo" : "Ignore"}
+          Ignore
         </button>
       </div>
     </div>
@@ -248,6 +264,7 @@ export default function App() {
   const [locationPill, setLocationPill] = useState(null);
   const [expFilter, setExpFilter] = useState(null);
   const [maxAge, setMaxAge] = useState(null);
+  const [sortBy, setSortBy] = useState("newest");
   const [companyFilter, setCompanyFilter] = useState("");
   const [overrides, setOverrides] = useState(loadOverrides);
   const [dark, setDark] = useState(() =>
@@ -280,11 +297,39 @@ export default function App() {
     localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
   }, [dark]);
 
-  const setStatus = (id, status) => {
+  // Tracking stores a snapshot of the job, so an application stays on the
+  // board even after the posting ages out of the exported feed.
+  const setStatus = (id, status, job) => {
     setOverrides((prev) => {
       const next = { ...prev };
-      if (status) next[id] = { status, at: new Date().toISOString() };
-      else delete next[id];
+      if (status) {
+        const snap = job
+          ? {
+              id: job.id,
+              title: job.title,
+              company: job.company,
+              location: job.location,
+              url: job.url,
+              source: job.source,
+              score: job.score,
+            }
+          : prev[id]?.job;
+        next[id] = { status, at: new Date().toISOString(), job: snap };
+      } else {
+        delete next[id];
+      }
+      localStorage.setItem(STATUS_KEY, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const deleteAllIgnored = () => {
+    setOverrides((prev) => {
+      const next = { ...prev };
+      const at = new Date().toISOString();
+      for (const [id, val] of Object.entries(prev)) {
+        if (val?.status === "ignored") next[id] = { status: "deleted", at };
+      }
       localStorage.setItem(STATUS_KEY, JSON.stringify(next));
       return next;
     });
@@ -295,18 +340,72 @@ export default function App() {
       ...j,
       effectiveStatus: overrides[j.id]?.status || null,
     }));
-    return list.sort((a, b) => b.score - a.score);
-  }, [data, overrides]);
+    return list.sort((a, b) => compareJobs(a, b, sortBy));
+  }, [data, overrides, sortBy]);
 
-  const trackedCount = useMemo(
+  // Surface a stalled pipeline instead of quietly showing yesterday's
+  // jobs: the daily run should always land something new.
+  const health = useMemo(() => {
+    if (!data?.last_run) return null;
+    const hoursOld = (Date.now() - new Date(data.last_run).getTime()) / 3_600_000;
+    if (hoursOld > 36) {
+      return `No successful radar run for ${Math.floor(hoursOld / 24)} days — the
+        daily workflow may be failing. Check GitHub Actions.`;
+    }
+    if (data.last_run_new === 0) {
+      return `The last radar run found no new postings. This is usually a
+        temporary API hiccup or an exhausted monthly quota — check the
+        workflow log if it repeats.`;
+    }
+    return null;
+  }, [data]);
+
+  // Tracked and ignored lists are built from the saved overrides rather
+  // than from the feed, falling back to the stored snapshot, so nothing
+  // the user has acted on can disappear when the feed rotates.
+  const trackedItems = useMemo(() => {
+    const byId = new Map(jobs.map((j) => [j.id, j]));
+    return Object.entries(overrides)
+      .filter(([, v]) => v?.status && v.status !== "deleted")
+      .map(([id, v]) => {
+        const live = byId.get(id);
+        const base = live ||
+          v.job || {
+            id,
+            title: "Job no longer listed",
+            company: "",
+            location: "",
+            url: "#",
+          };
+        return { ...base, id, status: v.status, at: v.at, stale: !live };
+      });
+  }, [jobs, overrides]);
+
+  const ignoredJobs = useMemo(
+    () => trackedItems.filter((j) => j.status === "ignored"),
+    [trackedItems]
+  );
+
+  const pipelineItems = useMemo(
+    () => trackedItems.filter((j) => j.status !== "ignored"),
+    [trackedItems]
+  );
+
+  const trackedCount = pipelineItems.length;
+
+  // Ignored and deleted jobs drop out of every listing view.
+  const activeJobs = useMemo(
     () =>
-      jobs.filter((j) => j.effectiveStatus && j.effectiveStatus !== "ignored").length,
+      jobs.filter(
+        (j) => j.effectiveStatus !== "ignored" && j.effectiveStatus !== "deleted"
+      ),
     [jobs]
   );
 
   const tabJobs = useMemo(
-    () => (tab === "pipeline" ? [] : jobs.filter((j) => matchesTab(j, tab))),
-    [jobs, tab]
+    () =>
+      CUSTOM_TABS.has(tab) ? [] : activeJobs.filter((j) => matchesTab(j, tab)),
+    [activeJobs, tab]
   );
   const matchesCompany = (j) =>
     !companyFilter || (j.company || "").trim().toLowerCase() === companyFilter;
@@ -474,13 +573,21 @@ export default function App() {
         </div>
       )}
 
+      {health && (
+        <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300">
+          ⚠️ {health}
+        </div>
+      )}
+
       {/* Cloud tabs */}
       <nav className="mt-6 flex flex-wrap gap-1 rounded-xl bg-slate-100 p-1 dark:bg-slate-900">
         {TABS.map((t) => {
           const count =
             t.id === "pipeline"
               ? trackedCount
-              : jobs.filter((j) => matchesTab(j, t.id)).length;
+              : t.id === "ignored"
+              ? ignoredJobs.length
+              : activeJobs.filter((j) => matchesTab(j, t.id)).length;
           const active = tab === t.id;
           return (
             <button
@@ -508,7 +615,13 @@ export default function App() {
       </nav>
 
       {tab === "pipeline" ? (
-        <Pipeline jobs={jobs} overrides={overrides} onSetStatus={setStatus} />
+        <Pipeline items={pipelineItems} onSetStatus={setStatus} />
+      ) : tab === "ignored" ? (
+        <IgnoredList
+          jobs={ignoredJobs}
+          onSetStatus={setStatus}
+          onDeleteAll={deleteAllIgnored}
+        />
       ) : (
         <>
       {/* Stat cards */}
@@ -575,6 +688,18 @@ export default function App() {
           {AGE_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
+          title="Order the job list"
+        >
+          {SORT_OPTIONS.map((o) => (
+            <option key={o.id} value={o.id}>
+              Sort: {o.label}
             </option>
           ))}
         </select>

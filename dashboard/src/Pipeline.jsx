@@ -1,11 +1,9 @@
 import { STAGES, daysLabel } from "./stages.js";
 
 // Kanban board of every job the user is tracking, one column per stage.
-export default function Pipeline({ jobs, overrides, onSetStatus }) {
-  const tracked = jobs.filter((j) => {
-    const s = overrides[j.id]?.status;
-    return s && s !== "ignored";
-  });
+// Items carry their own status/at and survive the posting leaving the feed.
+export default function Pipeline({ items, onSetStatus }) {
+  const tracked = items;
 
   if (tracked.length === 0) {
     return (
@@ -19,7 +17,7 @@ export default function Pipeline({ jobs, overrides, onSetStatus }) {
   return (
     <div className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-5">
       {STAGES.map((stage) => {
-        const inStage = tracked.filter((j) => overrides[j.id].status === stage.id);
+        const inStage = tracked.filter((j) => j.status === stage.id);
         return (
           <div
             key={stage.id}
@@ -50,7 +48,8 @@ export default function Pipeline({ jobs, overrides, onSetStatus }) {
                     {job.company} · {job.location}
                   </p>
                   <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
-                    {stage.emoji} {daysLabel(overrides[job.id].at)} in this stage
+                    {stage.emoji} {daysLabel(job.at)} in this stage
+                    {job.stale && " · no longer listed"}
                   </p>
                   <div className="mt-2 flex flex-wrap gap-1">
                     {STAGES.filter((s) => s.id !== stage.id).map((s) => (

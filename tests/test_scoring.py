@@ -1,6 +1,9 @@
 """Unit tests for the scoring, experience-parsing, cloud-tagging, and rotation logic."""
 
+import json
 import sqlite3
+import time
+from datetime import datetime, timedelta, timezone
 
 import pytest
 
@@ -154,6 +157,238 @@ class TestQueryRotation:
             f"{total} combos at {radar.DAILY_BUDGET}/day = {sweep_days}-day "
             "sweep, exceeding the 7-day search window"
         )
+
+
+class TestDedupeWindow:
+    """Exact repeats are always blocked; reposts after the window are not."""
+
+    def _conn(self):
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(radar.SCHEMA)
+        return conn
+
+    def _job(self, **kw):
+        base = {
+            "id": "j1", "title": "DevOps Engineer", "company": "Infosys",
+            "location": "Pune", "url": "https://x.com/1", "source": "LinkedIn",
+            "posted_at": "2026-08-01T00:00:00+00:00", "score": 5.0,
+            "cloud_tags": "gcp", "skills": "GCP", "experience": "4-8 yrs",
+            "status": "new",
+        }
+        base.update(kw)
+        return base
+
+    def _store(self, conn, job, days_ago):
+        created = (
+            datetime.now(timezone.utc) - timedelta(days=days_ago)
+        ).isoformat()
+        conn.execute(
+            "INSERT INTO jobs (id, title, company, url, source, created_at) "
+            "VALUES (?,?,?,?,?,?)",
+            (job["id"], job["title"], job["company"], job["url"],
+             job["source"], created),
+        )
+        conn.commit()
+
+    def test_same_url_always_blocked_even_when_ancient(self):
+        conn = self._conn()
+        self._store(conn, self._job(), days_ago=500)
+        assert radar.insert_new_jobs(conn, [self._job()]) == []
+
+    def test_recent_repost_is_blocked(self):
+        conn = self._conn()
+        self._store(conn, self._job(), days_ago=5)
+        repost = self._job(id="j2", url="https://x.com/2")
+        assert radar.insert_new_jobs(conn, [repost]) == []
+
+    def test_repost_after_window_is_accepted(self):
+        # The whole point: an identical title+company posted months later
+        # is a real new opening and must reach the dashboard.
+        conn = self._conn()
+        self._store(conn, self._job(), days_ago=radar.FUZZY_DUPE_WINDOW_DAYS + 10)
+        repost = self._job(id="j2", url="https://x.com/2")
+        assert len(radar.insert_new_jobs(conn, [repost])) == 1
+
+    def test_different_company_never_deduped(self):
+        conn = self._conn()
+        self._store(conn, self._job(), days_ago=1)
+        other = self._job(id="j3", url="https://x.com/3", company="Wipro")
+        assert len(radar.insert_new_jobs(conn, [other])) == 1
+
+
+class TestNaukriUnstatedExperience:
+    """Naukri says "0 to 0 years" when a posting states no requirement."""
+
+    def test_zero_to_zero_url_slug_is_unstated(self):
+        job = radar.normalize_naukri({
+            "jobId": "1", "title": "Senior DevOps Engineer", "company": "HighRadius",
+            "location": "Hyderabad", "description": "GCP",
+            "portalUrl": "https://www.naukri.com/job-listings-x-hyderabad-0-to-0-years-1",
+        })
+        assert job["experience"] == ""
+
+    def test_zero_to_zero_dict_is_unstated(self):
+        job = radar.normalize_naukri({
+            "jobId": "2", "title": "DevOps Engineer", "company": "Acme",
+            "location": "Pune", "experience": {"min": 0, "max": 0},
+            "portalUrl": "https://www.naukri.com/job-listings-y-2",
+        })
+        assert job["experience"] == ""
+
+    def test_real_range_still_kept(self):
+        job = radar.normalize_naukri({
+            "jobId": "3", "title": "DevOps Engineer", "company": "Acme",
+            "location": "Pune", "experience": {"min": 0, "max": 5},
+            "portalUrl": "https://www.naukri.com/job-listings-z-3",
+        })
+        assert job["experience"] == "0-5 yrs"
+
+    def test_backfill_clears_stored_zero_zero(self):
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(radar.SCHEMA)
+        conn.execute(
+            "INSERT INTO jobs (id, title, url, source, experience) VALUES "
+            "('nk-1','Senior DevOps','https://naukri.com/a-0-to-0-years-1',"
+            "'Naukri','0-0 yrs')"
+        )
+        radar.backfill_naukri_experience(conn)
+        row = conn.execute("SELECT experience FROM jobs WHERE id='nk-1'").fetchone()
+        assert row["experience"] == ""
+
+
+class TestExportWindow:
+    """The feed must not grow without bound, but must not lose history."""
+
+    def test_old_jobs_leave_the_feed_but_stay_in_the_db(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(radar, "JSON_PATH", tmp_path / "jobs.json")
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(radar.SCHEMA)
+        fresh = datetime.now(timezone.utc).isoformat()
+        old = (
+            datetime.now(timezone.utc)
+            - timedelta(days=radar.EXPORT_WINDOW_DAYS + 5)
+        ).isoformat()
+        conn.execute(
+            "INSERT INTO jobs (id, title, created_at) VALUES ('a','New',?)", (fresh,)
+        )
+        conn.execute(
+            "INSERT INTO jobs (id, title, created_at) VALUES ('b','Old',?)", (old,)
+        )
+        conn.commit()
+
+        exported = radar.export_json(conn)
+        assert exported == 1, "only the recent job belongs in the feed"
+        assert conn.execute("SELECT COUNT(*) c FROM jobs").fetchone()["c"] == 2, (
+            "history must stay in SQLite so dedupe keeps working"
+        )
+        payload = json.loads((tmp_path / "jobs.json").read_text())
+        assert [j["id"] for j in payload["jobs"]] == ["a"]
+
+
+class TestQuotaBudget:
+    """The free tier is 200 calls per cycle — never overspend it."""
+
+    def test_unknown_quota_uses_default(self):
+        assert radar.affordable_calls(None, None) == radar.DAILY_BUDGET
+
+    def test_healthy_quota_gets_full_budget(self):
+        assert radar.affordable_calls(200, 30 * 86400) == radar.DAILY_BUDGET
+
+    def test_low_quota_rations_calls(self):
+        # 60 left over 20 days, minus reserve -> 2/day, not the full 6.
+        assert radar.affordable_calls(60, 20 * 86400) == 2
+
+    def test_exhausted_quota_spends_nothing(self):
+        assert radar.affordable_calls(0, 4 * 86400) == 0
+        assert radar.affordable_calls(-1, 4 * 86400) == 0
+        assert radar.affordable_calls(radar.QUOTA_RESERVE, 86400) == 0
+
+    def test_never_exceeds_quota_over_a_full_cycle(self):
+        # Simulate a 30-day cycle spending the planned budget each day and
+        # confirm the plan never runs the balance negative.
+        remaining = 200
+        for day in range(30, 0, -1):
+            spend = radar.affordable_calls(remaining, day * 86400)
+            remaining -= spend
+            assert remaining >= 0, f"overspent with {day} days left"
+        assert remaining >= 0
+
+    def test_topup_only_from_surplus(self):
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(radar.SCHEMA)
+        # Plenty of quota, thin run -> top-up allowed.
+        radar.set_meta(conn, "quota_remaining", "190")
+        radar.set_meta(conn, "quota_reset_at", str(time.time() + 5 * 86400))
+        assert radar.topup_budget(0, conn) > 0
+        # Same thin run but scarce quota -> no top-up.
+        radar.set_meta(conn, "quota_remaining", "20")
+        radar.set_meta(conn, "quota_reset_at", str(time.time() + 20 * 86400))
+        assert radar.topup_budget(0, conn) == 0
+        # Healthy run -> never tops up regardless of quota.
+        radar.set_meta(conn, "quota_remaining", "190")
+        assert radar.topup_budget(radar.MIN_NEW_PER_RUN, conn) == 0
+
+    def test_expired_cycle_resets_quota_view(self):
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(radar.SCHEMA)
+        radar.set_meta(conn, "quota_remaining", "0")
+        radar.set_meta(conn, "quota_reset_at", str(time.time() - 10))
+        assert radar.load_quota(conn) == (None, None)
+
+
+class TestRotationResilience:
+    """A failed query must not cost its combo a turn in the rotation."""
+
+    def _conn(self):
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(radar.SCHEMA)
+        return conn
+
+    def test_cursor_holds_when_nothing_answers(self, monkeypatch):
+        conn = self._conn()
+        monkeypatch.setattr(radar, "_jsearch_query", lambda *a, **k: ([], False))
+        radar.fetch_jobs("key", conn, budget=6)
+        assert radar.get_meta(conn, "fetch_cursor", "0") == "0"
+        assert radar.get_meta(conn, "stuck_runs") == "1"
+
+    def test_cursor_advances_only_past_answered_combos(self, monkeypatch):
+        conn = self._conn()
+        calls = {"n": 0}
+
+        def fake(headers, query, window):
+            calls["n"] += 1
+            return ([], calls["n"] <= 2)  # first two answer, third fails
+
+        monkeypatch.setattr(radar, "_jsearch_query", fake)
+        monkeypatch.setattr(radar, "API_SLEEP_SECONDS", 0)
+        radar.fetch_jobs("key", conn, budget=6)
+        assert radar.get_meta(conn, "fetch_cursor") == "2"
+
+    def test_forces_progress_after_repeated_total_failure(self, monkeypatch):
+        conn = self._conn()
+        monkeypatch.setattr(radar, "_jsearch_query", lambda *a, **k: ([], False))
+        for _ in range(radar.STUCK_RUNS_BEFORE_SKIP):
+            radar.fetch_jobs("key", conn, budget=6)
+        assert radar.get_meta(conn, "fetch_cursor") == "1"
+        assert radar.get_meta(conn, "stuck_runs") == "0"
+
+    def test_zero_budget_makes_no_calls(self, monkeypatch):
+        conn = self._conn()
+        called = {"n": 0}
+
+        def fake(*a, **k):
+            called["n"] += 1
+            return ([], True)
+
+        monkeypatch.setattr(radar, "_jsearch_query", fake)
+        assert radar.fetch_jobs("key", conn, budget=0) == []
+        assert called["n"] == 0
 
 
 class TestNormalizeNaukri:
