@@ -1,10 +1,10 @@
 # 🛰 DevOps Job Radar
 
 Personal job-alert system: runs daily on GitHub Actions, finds DevOps jobs
-matching your profile via the JSearch API, scores them 0–10, and publishes
-a dashboard to Netlify (works with a private repo on the free plan).
-Refresh on demand with one click from the dashboard's "Run radar now" link
-(GitHub Actions manual trigger).
+matching your profile via the JSearch API and a Naukri scraper, scores them
+0–10, and publishes a dashboard to GitHub Pages (free and unmetered for
+public repos). Refresh on demand with one click from the dashboard's
+"Run radar now" link (GitHub Actions manual trigger).
 
 ```
 ├── src/radar.py              # fetch → score → dedupe → export
@@ -12,9 +12,9 @@ Refresh on demand with one click from the dashboard's "Run radar now" link
 ├── data/jobs.json            # dashboard data (committed by the workflow)
 ├── dashboard/                # React + Vite + Tailwind static dashboard
 ├── tests/test_scoring.py     # pytest unit tests for scoring
-├── netlify.toml              # Netlify build config for the dashboard
 └── .github/workflows/
-    └── radar.yml             # daily 8:00 AM IST run + manual trigger
+    ├── radar.yml             # daily 8:00 AM IST run + manual trigger
+    └── deploy.yml            # publishes the dashboard to GitHub Pages
 ```
 
 ## How it works
@@ -90,28 +90,28 @@ Refresh on demand with one click from the dashboard's "Run radar now" link
 2. On GitHub: **Settings → Secrets and variables → Actions → New repository secret**.
 3. Add `RAPIDAPI_KEY` (your JSearch key) and `APIFY_TOKEN` (from step 2).
 
-### 4. Deploy the dashboard to Netlify
+### 4. Enable GitHub Pages
 
-GitHub Pages requires a public repo on the free plan; Netlify's free tier
-deploys private repos, so the dashboard is hosted there instead.
+The dashboard is hosted on **GitHub Pages** — free and unmetered for public
+repos, with no build-credit limits (unlike Netlify's credit-based free plan).
 
-1. Go to <https://app.netlify.com> → **Sign up** → **Continue with GitHub**
-   (authorize Netlify to access your repos).
-2. **Add new site → Import an existing project → GitHub** → pick this repo.
-3. Netlify reads `netlify.toml` automatically — the build settings
-   (base `dashboard`, command `npm run build`, publish `dist`) are already
-   filled in. Click **Deploy**.
-4. Your dashboard URL is `https://<site-name>.netlify.app` (you can rename
-   the site under **Site configuration → Site details → Change site name**).
+1. On GitHub: **Settings → Pages**.
+2. Under **Build and deployment → Source**, select **GitHub Actions**.
+3. The `Deploy dashboard` workflow publishes the site. Your URL will be
+   `https://<your-username>.github.io/devops-tracker/`.
 
-Every time the daily radar workflow commits fresh data to `main`, Netlify
-rebuilds and redeploys the dashboard automatically.
+> The Vite `base` is set to `/devops-tracker/` for the production build so
+> assets and the data feed resolve on the project-site path. If you fork
+> under a different repo name, update `base` in `dashboard/vite.config.js`.
+
+Every time the daily radar workflow commits fresh data to `main`, the
+`Deploy dashboard` workflow rebuilds and republishes automatically.
 
 ### 5. Test with a manual run
 
 1. On GitHub: **Actions → Job Radar (daily) → Run workflow → Run workflow**.
 2. Watch the run: it fetches jobs, updates `data/jobs.db` + `data/jobs.json`,
-   and commits them — the commit triggers a Netlify rebuild with the fresh
+   and commits them — the commit triggers the Pages deploy with the fresh
    data (~1 minute).
 3. From then on it runs automatically every day at **8:00 AM IST**
    (cron `30 2 * * *` UTC), and you can also trigger it any time from the
