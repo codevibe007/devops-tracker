@@ -153,6 +153,11 @@ npm run dev                     # auto-copies ../data/jobs.json into public/
   collects it here, where it can be restored individually or cleared with
   **Delete all ignored**. Deleted jobs are tombstoned in `localStorage`,
   so they stay gone even though the daily export still contains them.
+- **💾 Backup & restore** — application tracking lives in the browser's
+  localStorage (per-device, per-URL). The Backup button downloads all your
+  marks as a small JSON file and restores them on any browser or device;
+  restore merges and keeps the newer mark per job. Use it before clearing
+  your browser or switching devices.
 - **Application pipeline tracking** — every job card has stage chips
   (📮 Applied → ✉️ Email Sent → 🎤 Interview → 🏆 Selected / 🚫 Rejected),
   each showing how long the job has been in that stage. The **🎯 My
