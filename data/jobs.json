@@ -1,7 +1,128 @@
 {
-  "last_run": "2026-08-13T07:04:26.968344+00:00",
-  "total": 1318,
+  "last_run": "2026-08-13T12:48:51.225731+00:00",
+  "total": 1324,
   "jobs": [
+    {
+      "id": "VE5qUnhmSFlDd1NwZzk4ekFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBTMEZoYUZWaGFFTlNaVEJsT0Vnd2VGQlVlVkZPU0dKSmJUaEpSMUpoZFhwa2JGbFZXVTAxTjI4NVFscHBUa1ZyTUZnd2NuYzNVR1EyYlV0cmVVZ3RRa3AyUmkxUlRXdFZWVzh3WkVaM2FqRnFWVk50ZGtwSE5tUjBhRUV6TWpCRlh6ZGtSbWhCTld0MmVsOVJZelpCT1VsWVZXSTFRM0ZzVnprMlVVUmlhSHBRUlUxQ09Xa1NGMGszTVRsaGMwdFdURnBYY1hCMFVWQjJkRGN4TUVGUkdpSkJSSE55T1daVVNYZFRZVzAyYmxZMU9HSm9SMUozTkd0VmEzUmxPRGx6YW5aQg",
+      "title": "DevOps Engineer - Big Data & Hadoop with Kubernetes and CI/CD",
+      "company": "Synechron Technologies",
+      "location": "Bengaluru, Karnataka",
+      "url": "https://apna.co/job/bengaluru/devops-data-hadoop-engineer-kubernetes-ci-cd-and-b-1546114750",
+      "source": "Apna Jobs",
+      "posted_at": "2026-08-09T00:00:00.000Z",
+      "score": 6.0,
+      "cloud_tags": "none",
+      "skills": [
+        "Terraform",
+        "Kubernetes",
+        "Helm",
+        "Jenkins",
+        "Ansible",
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "7+ yrs",
+      "status": "new",
+      "created_at": "2026-08-13T12:48:49.108193+00:00"
+    },
+    {
+      "id": "QnJtQkFMaEJxeklCN1BmNUFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBTMWhNTm14U2IyaE9RazVUTUY5dFNFUmlRMUJ3WkVkRllXRnJSMHBCYzFOa1Vra3daSEpLTFRkelJXSlljRlZRTFhwSGVUTnJNR1ZFZUY5NlNqaGFXbEZvUVhaQldFbFBjMFpqZW5OcFYyVmlOVkpJYmtsNVYwNVRPV1pLZEhOc1YyMXlkekoyV25kQ2NtZDFPWEZTWldsTWRWWkVVVXh1VFZkZlQzZFFlSE0wZFVocGVUSVNGMGszTVRsaGMwdFdURnBYY1hCMFVWQjJkRGN4TUVGUkdpSkJSSE55T1daU1ZXRk1OMWs1TFhKa1YxVjRRbGRFU2tOaE9YQTRTWE5TZFU1Qg",
+      "title": "Senior Software Engineer - Kubernetes and Infrastructure as Code",
+      "company": "Microsoft Corporation India Pvt Ltd.",
+      "location": "Bengaluru, Karnataka",
+      "url": "https://apna.co/job/bengaluru/senior-software-engineer-kubernetes-and-iac-1692767137",
+      "source": "Apna Jobs",
+      "posted_at": "2026-08-07T00:00:00.000Z",
+      "score": 3.5,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "Helm"
+      ],
+      "experience": "8+ yrs",
+      "status": "new",
+      "created_at": "2026-08-13T12:48:49.108193+00:00"
+    },
+    {
+      "id": "RFJtMkgxY1dTRzFwNV81aUFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBTM3AxWWxCRVJYY3dSVmRFYVRGaFlXeGZSR0ZGZVhWVlVWaG9XbVUyWms1VldtcHRUMUZwYldsQ05IVktPVUpCWTBacFJUVTRUMFZTZEVKNU1XVjNNelptZFhaMVRUUlVhMlJwTjJaNlMyRkNhSFJRYmpGZmNWcFRNMFZqY21oRVVISk5Oa0ZyVDFBMVVXZFBSbkJWYjBGT04xWTJNMncwZEc5V2IzWkdaMDV1YzBGSE16QVNGMGszTVRsaGMwdFdURnBYY1hCMFVWQjJkRGN4TUVGUkdpSkJSSE55T1daU1RtWXRURTFoYlV4WGJHdzRkWFJTTTJWVk5IbE5YM290U1hOQg",
+      "title": "Ltm Opportunities For Devops Engineer Role Bengaluru",
+      "company": "LTM",
+      "location": "Bengaluru, Karnataka",
+      "url": "https://www.shine.com/jobs/ltm-opportunities-for-devops-engineer-role-bengaluru/ltm/19447238",
+      "source": "Shine",
+      "posted_at": "2026-08-12T00:00:00.000Z",
+      "score": 3.0,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-08-13T12:48:49.108193+00:00"
+    },
+    {
+      "id": "LXNEQVQ4SEVQQzlUZTAybEFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBTazFuVFhsdGQwdFdlazFuUlhoeVJpMDVOVE15VjNaQmNtSXRVbUYwU0VWRFlqRkVUVmxxT1U5S1QzWk9jbnA0Wm1GMmJqTm9hV0owY3poU2NucEhjRVI1TFROcFFXUlFTMUJ4UkhaT2FrazBURFJSYlZkNmVVd3Rja1U0VjBwTFVHRkNUMVJ2WTBGWVowNW1kSEpIU1ZKSmRGRnhMVE5TY25OT2NrdFdUVlJvUzFWcVRrc1NGMGszTVRsaGMwdFdURnBYY1hCMFVWQjJkRGN4TUVGUkdpSkJSSE55T1daVFNtSjNVRlJoTFhJM05UbFlTM1JGTkVONVJGTm9WREZ6ZFRSbg",
+      "title": "Leader, Software Engineering - Go/Python - Container/Kubernetes - SaaS/Public cloud - AI - 12 to 16 years - Bangalore",
+      "company": "Cisco",
+      "location": "Bengaluru, Karnataka",
+      "url": "https://careers.cisco.com/global/en/job/CISCISGLOBAL2021414EXTERNALENGLOBAL/Leader-Software-Engineering-Go-Python-Container-Kubernetes-SaaS-Public-cloud-AI-12-to-16-years-Bangalore",
+      "source": "Cisco Careers",
+      "posted_at": "2026-08-12T23:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "none",
+      "skills": [
+        "Kubernetes",
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "12-16 yrs",
+      "status": "new",
+      "created_at": "2026-08-13T12:48:49.108193+00:00"
+    },
+    {
+      "id": "VTJkUDR3Nlp2SVBVcDNvRkFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBTbVp6YVZWc1ptNHhNMVF4Y25WVE1HTlRTbXBrZFc4NGJHOVRRVTk0TVdkdFVrMDBiRVF4UVhsS1pWOXhkRWxrYURORFJreEhZVVJ2YkRCdUxVaENaSEE1ZFdSTlpsSmljMTgxTlZRM1dGTjNNR1ZpUm5jeGJXRTBSbE5CVVZoV1l6WnpSUzFCZVVoU1ZEQldSMjVhVFRORVdVVlBhM0J2Y0RBNVN6ZE5RbVJxUnpKME1td1NGMGszTVRsaGMwdFdURnBYY1hCMFVWQjJkRGN4TUVGUkdpSkJSSE55T1daVU1qVkhjMnRTWVZCZlZIUklaMDFOVlVVM01UZG9ZV05KZVZwQg",
+      "title": "Cisco Technical Leader  Golang, AWS & Kubernetes in Bangalore | Hybrid",
+      "company": "Cisco Systems",
+      "location": "Bengaluru, Karnataka",
+      "url": "https://www.shine.com/jobs/cisco-technical-leader-golang-aws-kubernetes-in-bangalore-hybrid/cisco-systems/19442986",
+      "source": "Shine",
+      "posted_at": "2026-08-11T00:00:00.000Z",
+      "score": 0.0,
+      "cloud_tags": "aws",
+      "skills": [
+        "AWS",
+        "Kubernetes"
+      ],
+      "experience": "12-15 yrs",
+      "status": "new",
+      "created_at": "2026-08-13T12:48:49.108193+00:00"
+    },
+    {
+      "id": "nk-130826021627",
+      "title": "Devops Engineer",
+      "company": "Quantum BSO",
+      "location": "Bengaluru",
+      "url": "https://www.naukri.com/job-listings-devops-engineer-quantum-bso-bengaluru-0-to-1-years-130826021627",
+      "source": "Naukri",
+      "posted_at": "2026-08-13T09:34:20.230000+00:00",
+      "score": 0.0,
+      "cloud_tags": "azure",
+      "skills": [
+        "Azure",
+        "Jenkins",
+        "CI/CD"
+      ],
+      "experience": "0-1 yrs",
+      "status": "new",
+      "created_at": "2026-08-13T12:48:49.108193+00:00"
+    },
     {
       "id": "VjZ4YzJITnFqU3JacU81cEFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBTMnd5TlVSeFUyczRNalZMVEdGQlpIaHhhbVI1ZEhWS1gzQTRTbWcxUm5rNVRYbGpTbVp4VVZKdFZHdFJjUzB0UzJGalR6azRiRmxuT0U5ek1Ib3ljVEpSUW5oRFpYZHVhMUpCVmpoU2VYZHRYMnQyUkRkaE1WZEpZazlDVTBsbE5XeHlWMUJ5VURsM1dFcFFSa2xHWlU5R1FXZzNURFUxWm14UFpsOVhRbFIwTkVKbk9YSVNGMXBIZURsaGNXRkVUbU55VUd0UVNWQXdja3RoY1VGdkdpSkJSSE55T1daU1lqbDNOV056T0hFMGNXRjVaM2h1VW1OaldsOXdRbGhmU0ZsUg",
       "title": "Infrastructure Engineer/SRE",
