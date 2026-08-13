@@ -25,7 +25,7 @@ import re
 import sqlite3
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from difflib import SequenceMatcher
 from pathlib import Path
 
@@ -109,6 +109,17 @@ TOPUP_MAX_CALLS = 4
 # never overspend the free tier: calls are rationed across the days left
 # until reset, keeping a small reserve for manual runs.
 QUOTA_RESERVE = 12
+
+# Near-identical title+company postings within this window are treated as
+# the same opening. Beyond it, a repost is a genuinely new opening and
+# must not be suppressed. Exact URL/id matches are always deduped, with
+# no time limit.
+FUZZY_DUPE_RATIO = 0.92
+FUZZY_DUPE_WINDOW_DAYS = 45
+
+# How much history the dashboard feed carries. Older jobs stay in SQLite
+# (dedupe history) but drop out of data/jobs.json to keep it small.
+EXPORT_WINDOW_DAYS = 90
 
 # Latest rate-limit state seen from RapidAPI (persisted in the meta table
 # between runs so the budget survives process restarts).
@@ -598,20 +609,25 @@ _NAUKRI_URL_EXP_RE = re.compile(r"(\d{1,2})-to-(\d{1,2})-years")
 
 
 def _naukri_experience(item: dict, url: str) -> str:
-    """Experience label from the structured field, text, or the URL slug."""
+    """Experience label from the structured field, text, or the URL slug.
+
+    Naukri reports "0 to 0 years" when a posting states no requirement, so
+    that is treated as unstated rather than as a real 0-0 range.
+    """
     value = item.get("experience")
     if isinstance(value, dict):
         lo, hi = value.get("min"), value.get("max")
         if lo is not None and hi is not None:
-            return f"{lo}-{hi} yrs"
+            return "" if (lo, hi) == (0, 0) else f"{lo}-{hi} yrs"
         if lo is not None:
             return f"{lo}+ yrs"
     exp = extract_experience(_flat_text(value))
     if exp:
-        return experience_label(exp)
+        return "" if exp == (0, 0) else experience_label(exp)
     m = _NAUKRI_URL_EXP_RE.search(url)
     if m:
-        return f"{int(m.group(1))}-{int(m.group(2))} yrs"
+        lo, hi = int(m.group(1)), int(m.group(2))
+        return "" if (lo, hi) == (0, 0) else f"{lo}-{hi} yrs"
     return ""
 
 
@@ -671,14 +687,24 @@ def backfill_naukri_experience(conn: sqlite3.Connection) -> None:
     for row in rows:
         m = _NAUKRI_URL_EXP_RE.search(row["url"] or "")
         if m:
+            lo, hi = int(m.group(1)), int(m.group(2))
+            if (lo, hi) == (0, 0):
+                continue
             conn.execute(
                 "UPDATE jobs SET experience = ? WHERE id = ?",
-                (f"{int(m.group(1))}-{int(m.group(2))} yrs", row["id"]),
+                (f"{lo}-{hi} yrs", row["id"]),
             )
             fixed += 1
-    if fixed:
+    # "0 to 0 years" means unstated; clear any stored earlier.
+    cleared = conn.execute(
+        "UPDATE jobs SET experience = '' WHERE experience = '0-0 yrs'"
+    ).rowcount
+    if fixed or cleared:
         conn.commit()
-        log.info("Backfilled experience for %d Naukri jobs", fixed)
+        log.info(
+            "Experience backfill: %d filled from URL, %d meaningless 0-0 cleared",
+            fixed, cleared,
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -735,22 +761,34 @@ def _norm_key(title: str, company: str) -> str:
 
 
 def is_duplicate(conn: sqlite3.Connection, job: dict, seen_keys: list[str]) -> bool:
-    """Duplicate if the URL exists in history or (title+company) fuzzy-matches."""
+    """Duplicate if the URL/id was seen before, or the title+company
+    fuzzy-matches a *recent* posting.
+
+    The fuzzy check is deliberately scoped to recent history: companies
+    repost the same role every few weeks, and those reposts are real
+    openings. Matching against all history forever would silently block
+    them, so only exact URL/id matches are checked against everything.
+    """
     row = conn.execute("SELECT 1 FROM jobs WHERE url = ? OR id = ?", (job["url"], job["id"])).fetchone()
     if row:
         return True
     key = _norm_key(job["title"], job["company"])
     for existing in seen_keys:
-        if SequenceMatcher(None, key, existing).ratio() >= 0.92:
+        if SequenceMatcher(None, key, existing).ratio() >= FUZZY_DUPE_RATIO:
             return True
     return False
 
 
 def insert_new_jobs(conn: sqlite3.Connection, jobs: list[dict]) -> list[dict]:
     """Insert non-duplicate jobs; return the ones actually inserted."""
+    cutoff = (
+        datetime.now(timezone.utc) - timedelta(days=FUZZY_DUPE_WINDOW_DAYS)
+    ).isoformat()
     seen_keys = [
         _norm_key(r["title"], r["company"] or "")
-        for r in conn.execute("SELECT title, company FROM jobs")
+        for r in conn.execute(
+            "SELECT title, company FROM jobs WHERE created_at >= ?", (cutoff,)
+        )
     ]
     inserted = []
     now = datetime.now(timezone.utc).isoformat()
@@ -781,7 +819,28 @@ def insert_new_jobs(conn: sqlite3.Connection, jobs: list[dict]) -> list[dict]:
 
 
 def export_json(conn: sqlite3.Connection, new_count: int | None = None) -> int:
-    rows = conn.execute("SELECT * FROM jobs ORDER BY created_at DESC, score DESC").fetchall()
+    """Write the dashboard feed.
+
+    Only recent postings are exported — the full history stays in SQLite
+    for dedupe. Without this the feed grows without bound (~0.9 KB/job,
+    so a year of collecting would mean a ~15 MB download per page load).
+    Jobs the user is tracking are snapshotted in the browser, so they
+    survive ageing out of the feed.
+    """
+    cutoff = (
+        datetime.now(timezone.utc) - timedelta(days=EXPORT_WINDOW_DAYS)
+    ).isoformat()
+    rows = conn.execute(
+        "SELECT * FROM jobs WHERE created_at >= ? "
+        "ORDER BY created_at DESC, score DESC",
+        (cutoff,),
+    ).fetchall()
+    archived = conn.execute(
+        "SELECT COUNT(*) c FROM jobs WHERE created_at < ?", (cutoff,)
+    ).fetchone()["c"]
+    if archived:
+        log.info("Export: %d older jobs kept in the database but not exported",
+                 archived)
     jobs = []
     for r in rows:
         job = dict(r)

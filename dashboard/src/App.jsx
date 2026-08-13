@@ -228,7 +228,7 @@ function JobCard({ job, override, onSetStatus }) {
           return (
             <button
               key={stage.id}
-              onClick={() => onSetStatus(job.id, active ? null : stage.id)}
+              onClick={() => onSetStatus(job.id, active ? null : stage.id, job)}
               title={
                 active
                   ? `${stage.label} for ${daysLabel(override?.at)} — click to clear`
@@ -246,7 +246,7 @@ function JobCard({ job, override, onSetStatus }) {
           );
         })}
         <button
-          onClick={() => onSetStatus(job.id, "ignored")}
+          onClick={() => onSetStatus(job.id, "ignored", job)}
           title="Hide this job — it moves to the Ignored tab"
           className="rounded-full px-2.5 py-1 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
         >
@@ -297,11 +297,27 @@ export default function App() {
     localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
   }, [dark]);
 
-  const setStatus = (id, status) => {
+  // Tracking stores a snapshot of the job, so an application stays on the
+  // board even after the posting ages out of the exported feed.
+  const setStatus = (id, status, job) => {
     setOverrides((prev) => {
       const next = { ...prev };
-      if (status) next[id] = { status, at: new Date().toISOString() };
-      else delete next[id];
+      if (status) {
+        const snap = job
+          ? {
+              id: job.id,
+              title: job.title,
+              company: job.company,
+              location: job.location,
+              url: job.url,
+              source: job.source,
+              score: job.score,
+            }
+          : prev[id]?.job;
+        next[id] = { status, at: new Date().toISOString(), job: snap };
+      } else {
+        delete next[id];
+      }
       localStorage.setItem(STATUS_KEY, JSON.stringify(next));
       return next;
     });
@@ -344,21 +360,38 @@ export default function App() {
     return null;
   }, [data]);
 
-  const trackedCount = useMemo(
-    () =>
-      jobs.filter(
-        (j) =>
-          j.effectiveStatus &&
-          j.effectiveStatus !== "ignored" &&
-          j.effectiveStatus !== "deleted"
-      ).length,
-    [jobs]
-  );
+  // Tracked and ignored lists are built from the saved overrides rather
+  // than from the feed, falling back to the stored snapshot, so nothing
+  // the user has acted on can disappear when the feed rotates.
+  const trackedItems = useMemo(() => {
+    const byId = new Map(jobs.map((j) => [j.id, j]));
+    return Object.entries(overrides)
+      .filter(([, v]) => v?.status && v.status !== "deleted")
+      .map(([id, v]) => {
+        const live = byId.get(id);
+        const base = live ||
+          v.job || {
+            id,
+            title: "Job no longer listed",
+            company: "",
+            location: "",
+            url: "#",
+          };
+        return { ...base, id, status: v.status, at: v.at, stale: !live };
+      });
+  }, [jobs, overrides]);
 
   const ignoredJobs = useMemo(
-    () => jobs.filter((j) => j.effectiveStatus === "ignored"),
-    [jobs]
+    () => trackedItems.filter((j) => j.status === "ignored"),
+    [trackedItems]
   );
+
+  const pipelineItems = useMemo(
+    () => trackedItems.filter((j) => j.status !== "ignored"),
+    [trackedItems]
+  );
+
+  const trackedCount = pipelineItems.length;
 
   // Ignored and deleted jobs drop out of every listing view.
   const activeJobs = useMemo(
@@ -582,7 +615,7 @@ export default function App() {
       </nav>
 
       {tab === "pipeline" ? (
-        <Pipeline jobs={jobs} overrides={overrides} onSetStatus={setStatus} />
+        <Pipeline items={pipelineItems} onSetStatus={setStatus} />
       ) : tab === "ignored" ? (
         <IgnoredList
           jobs={ignoredJobs}

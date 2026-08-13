@@ -1,7 +1,9 @@
 """Unit tests for the scoring, experience-parsing, cloud-tagging, and rotation logic."""
 
+import json
 import sqlite3
 import time
+from datetime import datetime, timedelta, timezone
 
 import pytest
 
@@ -155,6 +157,135 @@ class TestQueryRotation:
             f"{total} combos at {radar.DAILY_BUDGET}/day = {sweep_days}-day "
             "sweep, exceeding the 7-day search window"
         )
+
+
+class TestDedupeWindow:
+    """Exact repeats are always blocked; reposts after the window are not."""
+
+    def _conn(self):
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(radar.SCHEMA)
+        return conn
+
+    def _job(self, **kw):
+        base = {
+            "id": "j1", "title": "DevOps Engineer", "company": "Infosys",
+            "location": "Pune", "url": "https://x.com/1", "source": "LinkedIn",
+            "posted_at": "2026-08-01T00:00:00+00:00", "score": 5.0,
+            "cloud_tags": "gcp", "skills": "GCP", "experience": "4-8 yrs",
+            "status": "new",
+        }
+        base.update(kw)
+        return base
+
+    def _store(self, conn, job, days_ago):
+        created = (
+            datetime.now(timezone.utc) - timedelta(days=days_ago)
+        ).isoformat()
+        conn.execute(
+            "INSERT INTO jobs (id, title, company, url, source, created_at) "
+            "VALUES (?,?,?,?,?,?)",
+            (job["id"], job["title"], job["company"], job["url"],
+             job["source"], created),
+        )
+        conn.commit()
+
+    def test_same_url_always_blocked_even_when_ancient(self):
+        conn = self._conn()
+        self._store(conn, self._job(), days_ago=500)
+        assert radar.insert_new_jobs(conn, [self._job()]) == []
+
+    def test_recent_repost_is_blocked(self):
+        conn = self._conn()
+        self._store(conn, self._job(), days_ago=5)
+        repost = self._job(id="j2", url="https://x.com/2")
+        assert radar.insert_new_jobs(conn, [repost]) == []
+
+    def test_repost_after_window_is_accepted(self):
+        # The whole point: an identical title+company posted months later
+        # is a real new opening and must reach the dashboard.
+        conn = self._conn()
+        self._store(conn, self._job(), days_ago=radar.FUZZY_DUPE_WINDOW_DAYS + 10)
+        repost = self._job(id="j2", url="https://x.com/2")
+        assert len(radar.insert_new_jobs(conn, [repost])) == 1
+
+    def test_different_company_never_deduped(self):
+        conn = self._conn()
+        self._store(conn, self._job(), days_ago=1)
+        other = self._job(id="j3", url="https://x.com/3", company="Wipro")
+        assert len(radar.insert_new_jobs(conn, [other])) == 1
+
+
+class TestNaukriUnstatedExperience:
+    """Naukri says "0 to 0 years" when a posting states no requirement."""
+
+    def test_zero_to_zero_url_slug_is_unstated(self):
+        job = radar.normalize_naukri({
+            "jobId": "1", "title": "Senior DevOps Engineer", "company": "HighRadius",
+            "location": "Hyderabad", "description": "GCP",
+            "portalUrl": "https://www.naukri.com/job-listings-x-hyderabad-0-to-0-years-1",
+        })
+        assert job["experience"] == ""
+
+    def test_zero_to_zero_dict_is_unstated(self):
+        job = radar.normalize_naukri({
+            "jobId": "2", "title": "DevOps Engineer", "company": "Acme",
+            "location": "Pune", "experience": {"min": 0, "max": 0},
+            "portalUrl": "https://www.naukri.com/job-listings-y-2",
+        })
+        assert job["experience"] == ""
+
+    def test_real_range_still_kept(self):
+        job = radar.normalize_naukri({
+            "jobId": "3", "title": "DevOps Engineer", "company": "Acme",
+            "location": "Pune", "experience": {"min": 0, "max": 5},
+            "portalUrl": "https://www.naukri.com/job-listings-z-3",
+        })
+        assert job["experience"] == "0-5 yrs"
+
+    def test_backfill_clears_stored_zero_zero(self):
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(radar.SCHEMA)
+        conn.execute(
+            "INSERT INTO jobs (id, title, url, source, experience) VALUES "
+            "('nk-1','Senior DevOps','https://naukri.com/a-0-to-0-years-1',"
+            "'Naukri','0-0 yrs')"
+        )
+        radar.backfill_naukri_experience(conn)
+        row = conn.execute("SELECT experience FROM jobs WHERE id='nk-1'").fetchone()
+        assert row["experience"] == ""
+
+
+class TestExportWindow:
+    """The feed must not grow without bound, but must not lose history."""
+
+    def test_old_jobs_leave_the_feed_but_stay_in_the_db(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(radar, "JSON_PATH", tmp_path / "jobs.json")
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(radar.SCHEMA)
+        fresh = datetime.now(timezone.utc).isoformat()
+        old = (
+            datetime.now(timezone.utc)
+            - timedelta(days=radar.EXPORT_WINDOW_DAYS + 5)
+        ).isoformat()
+        conn.execute(
+            "INSERT INTO jobs (id, title, created_at) VALUES ('a','New',?)", (fresh,)
+        )
+        conn.execute(
+            "INSERT INTO jobs (id, title, created_at) VALUES ('b','Old',?)", (old,)
+        )
+        conn.commit()
+
+        exported = radar.export_json(conn)
+        assert exported == 1, "only the recent job belongs in the feed"
+        assert conn.execute("SELECT COUNT(*) c FROM jobs").fetchone()["c"] == 2, (
+            "history must stay in SQLite so dedupe keeps working"
+        )
+        payload = json.loads((tmp_path / "jobs.json").read_text())
+        assert [j["id"] for j in payload["jobs"]] == ["a"]
 
 
 class TestQuotaBudget:
