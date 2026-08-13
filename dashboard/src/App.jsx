@@ -3,6 +3,7 @@ import { loadSession, clearSession } from "./auth.js";
 import Login from "./Login.jsx";
 import AdminPanel from "./AdminPanel.jsx";
 import Pipeline from "./Pipeline.jsx";
+import IgnoredList from "./IgnoredList.jsx";
 import { STAGES, daysLabel } from "./stages.js";
 
 const TABS = [
@@ -12,7 +13,11 @@ const TABS = [
   { id: "azure", label: "Azure" },
   { id: "noexp", label: "No Exp Listed" },
   { id: "pipeline", label: "🎯 My Pipeline" },
+  { id: "ignored", label: "🚫 Ignored" },
 ];
+
+// Views that render their own layout instead of the filtered job list.
+const CUSTOM_TABS = new Set(["pipeline", "ignored"]);
 
 // Main tabs only show jobs whose stated experience overlaps 0-8 yrs;
 // postings that don't state experience live in the "No Exp Listed" tab.
@@ -162,13 +167,8 @@ function StatCard({ label, value }) {
 
 function JobCard({ job, override, onSetStatus }) {
   const status = override?.status || null;
-  const ignored = status === "ignored";
   return (
-    <div
-      className={`rounded-xl border border-slate-200 bg-white p-4 transition dark:border-slate-800 dark:bg-slate-900 ${
-        ignored ? "opacity-40" : ""
-      }`}
-    >
+    <div className="rounded-xl border border-slate-200 bg-white p-4 transition dark:border-slate-800 dark:bg-slate-900">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="truncate font-semibold text-slate-900 dark:text-slate-100">
@@ -246,14 +246,11 @@ function JobCard({ job, override, onSetStatus }) {
           );
         })}
         <button
-          onClick={() => onSetStatus(job.id, ignored ? null : "ignored")}
-          className={`rounded-full px-2.5 py-1 text-xs ${
-            ignored
-              ? "bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300"
-              : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
-          }`}
+          onClick={() => onSetStatus(job.id, "ignored")}
+          title="Hide this job — it moves to the Ignored tab"
+          className="rounded-full px-2.5 py-1 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
         >
-          {ignored ? "Ignored — undo" : "Ignore"}
+          Ignore
         </button>
       </div>
     </div>
@@ -310,6 +307,18 @@ export default function App() {
     });
   };
 
+  const deleteAllIgnored = () => {
+    setOverrides((prev) => {
+      const next = { ...prev };
+      const at = new Date().toISOString();
+      for (const [id, val] of Object.entries(prev)) {
+        if (val?.status === "ignored") next[id] = { status: "deleted", at };
+      }
+      localStorage.setItem(STATUS_KEY, JSON.stringify(next));
+      return next;
+    });
+  };
+
   const jobs = useMemo(() => {
     const list = (data?.jobs || []).map((j) => ({
       ...j,
@@ -337,13 +346,33 @@ export default function App() {
 
   const trackedCount = useMemo(
     () =>
-      jobs.filter((j) => j.effectiveStatus && j.effectiveStatus !== "ignored").length,
+      jobs.filter(
+        (j) =>
+          j.effectiveStatus &&
+          j.effectiveStatus !== "ignored" &&
+          j.effectiveStatus !== "deleted"
+      ).length,
+    [jobs]
+  );
+
+  const ignoredJobs = useMemo(
+    () => jobs.filter((j) => j.effectiveStatus === "ignored"),
+    [jobs]
+  );
+
+  // Ignored and deleted jobs drop out of every listing view.
+  const activeJobs = useMemo(
+    () =>
+      jobs.filter(
+        (j) => j.effectiveStatus !== "ignored" && j.effectiveStatus !== "deleted"
+      ),
     [jobs]
   );
 
   const tabJobs = useMemo(
-    () => (tab === "pipeline" ? [] : jobs.filter((j) => matchesTab(j, tab))),
-    [jobs, tab]
+    () =>
+      CUSTOM_TABS.has(tab) ? [] : activeJobs.filter((j) => matchesTab(j, tab)),
+    [activeJobs, tab]
   );
   const matchesCompany = (j) =>
     !companyFilter || (j.company || "").trim().toLowerCase() === companyFilter;
@@ -523,7 +552,9 @@ export default function App() {
           const count =
             t.id === "pipeline"
               ? trackedCount
-              : jobs.filter((j) => matchesTab(j, t.id)).length;
+              : t.id === "ignored"
+              ? ignoredJobs.length
+              : activeJobs.filter((j) => matchesTab(j, t.id)).length;
           const active = tab === t.id;
           return (
             <button
@@ -552,6 +583,12 @@ export default function App() {
 
       {tab === "pipeline" ? (
         <Pipeline jobs={jobs} overrides={overrides} onSetStatus={setStatus} />
+      ) : tab === "ignored" ? (
+        <IgnoredList
+          jobs={ignoredJobs}
+          onSetStatus={setStatus}
+          onDeleteAll={deleteAllIgnored}
+        />
       ) : (
         <>
       {/* Stat cards */}

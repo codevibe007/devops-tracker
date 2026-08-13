@@ -149,6 +149,10 @@ npm run dev                     # auto-copies ../data/jobs.json into public/
   combine; each control's counts reflect the other active filters.
 - Job cards with skill tags and a match-score badge (green ≥ 8, amber 6–8,
   dimmed < 6), plus **Apply / Mark applied / Ignore** buttons.
+- **🚫 Ignored tab** — ignoring a job removes it from every listing and
+  collects it here, where it can be restored individually or cleared with
+  **Delete all ignored**. Deleted jobs are tombstoned in `localStorage`,
+  so they stay gone even though the daily export still contains them.
 - **Application pipeline tracking** — every job card has stage chips
   (📮 Applied → ✉️ Email Sent → 🎤 Interview → 🏆 Selected / 🚫 Rejected),
   each showing how long the job has been in that stage. The **🎯 My

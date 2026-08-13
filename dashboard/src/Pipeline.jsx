@@ -4,7 +4,7 @@ import { STAGES, daysLabel } from "./stages.js";
 export default function Pipeline({ jobs, overrides, onSetStatus }) {
   const tracked = jobs.filter((j) => {
     const s = overrides[j.id]?.status;
-    return s && s !== "ignored";
+    return s && s !== "ignored" && s !== "deleted";
   });
 
   if (tracked.length === 0) {
