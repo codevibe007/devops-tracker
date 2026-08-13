@@ -1,6 +1,7 @@
 """Unit tests for the scoring, experience-parsing, cloud-tagging, and rotation logic."""
 
 import sqlite3
+import time
 
 import pytest
 
@@ -154,6 +155,109 @@ class TestQueryRotation:
             f"{total} combos at {radar.DAILY_BUDGET}/day = {sweep_days}-day "
             "sweep, exceeding the 7-day search window"
         )
+
+
+class TestQuotaBudget:
+    """The free tier is 200 calls per cycle — never overspend it."""
+
+    def test_unknown_quota_uses_default(self):
+        assert radar.affordable_calls(None, None) == radar.DAILY_BUDGET
+
+    def test_healthy_quota_gets_full_budget(self):
+        assert radar.affordable_calls(200, 30 * 86400) == radar.DAILY_BUDGET
+
+    def test_low_quota_rations_calls(self):
+        # 60 left over 20 days, minus reserve -> 2/day, not the full 6.
+        assert radar.affordable_calls(60, 20 * 86400) == 2
+
+    def test_exhausted_quota_spends_nothing(self):
+        assert radar.affordable_calls(0, 4 * 86400) == 0
+        assert radar.affordable_calls(-1, 4 * 86400) == 0
+        assert radar.affordable_calls(radar.QUOTA_RESERVE, 86400) == 0
+
+    def test_never_exceeds_quota_over_a_full_cycle(self):
+        # Simulate a 30-day cycle spending the planned budget each day and
+        # confirm the plan never runs the balance negative.
+        remaining = 200
+        for day in range(30, 0, -1):
+            spend = radar.affordable_calls(remaining, day * 86400)
+            remaining -= spend
+            assert remaining >= 0, f"overspent with {day} days left"
+        assert remaining >= 0
+
+    def test_topup_only_from_surplus(self):
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(radar.SCHEMA)
+        # Plenty of quota, thin run -> top-up allowed.
+        radar.set_meta(conn, "quota_remaining", "190")
+        radar.set_meta(conn, "quota_reset_at", str(time.time() + 5 * 86400))
+        assert radar.topup_budget(0, conn) > 0
+        # Same thin run but scarce quota -> no top-up.
+        radar.set_meta(conn, "quota_remaining", "20")
+        radar.set_meta(conn, "quota_reset_at", str(time.time() + 20 * 86400))
+        assert radar.topup_budget(0, conn) == 0
+        # Healthy run -> never tops up regardless of quota.
+        radar.set_meta(conn, "quota_remaining", "190")
+        assert radar.topup_budget(radar.MIN_NEW_PER_RUN, conn) == 0
+
+    def test_expired_cycle_resets_quota_view(self):
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(radar.SCHEMA)
+        radar.set_meta(conn, "quota_remaining", "0")
+        radar.set_meta(conn, "quota_reset_at", str(time.time() - 10))
+        assert radar.load_quota(conn) == (None, None)
+
+
+class TestRotationResilience:
+    """A failed query must not cost its combo a turn in the rotation."""
+
+    def _conn(self):
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(radar.SCHEMA)
+        return conn
+
+    def test_cursor_holds_when_nothing_answers(self, monkeypatch):
+        conn = self._conn()
+        monkeypatch.setattr(radar, "_jsearch_query", lambda *a, **k: ([], False))
+        radar.fetch_jobs("key", conn, budget=6)
+        assert radar.get_meta(conn, "fetch_cursor", "0") == "0"
+        assert radar.get_meta(conn, "stuck_runs") == "1"
+
+    def test_cursor_advances_only_past_answered_combos(self, monkeypatch):
+        conn = self._conn()
+        calls = {"n": 0}
+
+        def fake(headers, query, window):
+            calls["n"] += 1
+            return ([], calls["n"] <= 2)  # first two answer, third fails
+
+        monkeypatch.setattr(radar, "_jsearch_query", fake)
+        monkeypatch.setattr(radar, "API_SLEEP_SECONDS", 0)
+        radar.fetch_jobs("key", conn, budget=6)
+        assert radar.get_meta(conn, "fetch_cursor") == "2"
+
+    def test_forces_progress_after_repeated_total_failure(self, monkeypatch):
+        conn = self._conn()
+        monkeypatch.setattr(radar, "_jsearch_query", lambda *a, **k: ([], False))
+        for _ in range(radar.STUCK_RUNS_BEFORE_SKIP):
+            radar.fetch_jobs("key", conn, budget=6)
+        assert radar.get_meta(conn, "fetch_cursor") == "1"
+        assert radar.get_meta(conn, "stuck_runs") == "0"
+
+    def test_zero_budget_makes_no_calls(self, monkeypatch):
+        conn = self._conn()
+        called = {"n": 0}
+
+        def fake(*a, **k):
+            called["n"] += 1
+            return ([], True)
+
+        monkeypatch.setattr(radar, "_jsearch_query", fake)
+        assert radar.fetch_jobs("key", conn, budget=0) == []
+        assert called["n"] == 0
 
 
 class TestNormalizeNaukri:

@@ -318,6 +318,23 @@ export default function App() {
     return list.sort((a, b) => compareJobs(a, b, sortBy));
   }, [data, overrides, sortBy]);
 
+  // Surface a stalled pipeline instead of quietly showing yesterday's
+  // jobs: the daily run should always land something new.
+  const health = useMemo(() => {
+    if (!data?.last_run) return null;
+    const hoursOld = (Date.now() - new Date(data.last_run).getTime()) / 3_600_000;
+    if (hoursOld > 36) {
+      return `No successful radar run for ${Math.floor(hoursOld / 24)} days — the
+        daily workflow may be failing. Check GitHub Actions.`;
+    }
+    if (data.last_run_new === 0) {
+      return `The last radar run found no new postings. This is usually a
+        temporary API hiccup or an exhausted monthly quota — check the
+        workflow log if it repeats.`;
+    }
+    return null;
+  }, [data]);
+
   const trackedCount = useMemo(
     () =>
       jobs.filter((j) => j.effectiveStatus && j.effectiveStatus !== "ignored").length,
@@ -491,6 +508,12 @@ export default function App() {
       {error && (
         <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
           Could not load jobs.json ({error}). Run the radar workflow first.
+        </div>
+      )}
+
+      {health && (
+        <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300">
+          ⚠️ {health}
         </div>
       )}
 

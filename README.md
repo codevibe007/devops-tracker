@@ -38,6 +38,19 @@ Refresh on demand with one click from the dashboard's "Run radar now" link
 3. **Dedupe** — by URL and fuzzy (title + company) match against SQLite history.
 4. **Export** — all tracked jobs to `data/jobs.json` for the dashboard.
 
+### Keeping fresh jobs arriving every day
+
+- **Transient failures are retried** (3 attempts with backoff), and a combo
+  that never answers keeps its place in the rotation instead of being
+  skipped for a whole cycle.
+- **Thin runs top up**: if a run yields fewer than 8 new jobs, extra
+  queries run — but only out of genuine quota surplus.
+- **Naukri uses a 3-day freshness window** so its daily 60 listings are
+  genuinely new rather than the same week-old set re-fetched.
+- **Failures are visible**: the run logs a loud warning when nothing new
+  lands, and the dashboard shows a banner if the last run added nothing
+  or if no run has succeeded in 36 hours.
+
 ## Setup (one time, ~15 minutes)
 
 ### 1. Get the RapidAPI JSearch key
@@ -48,13 +61,15 @@ Refresh on demand with one click from the dashboard's "Run radar now" link
 4. On the API page, copy the value shown as **X-RapidAPI-Key** — that is your
    `RAPIDAPI_KEY`.
 
-> ✅ **Free-tier quota — handled automatically.** The free JSearch plan allows
-> ~200 requests/month, so the radar makes only **6 API calls per day**
-> (~180/month) and **rotates** through all 28 role × location combos — each
-> combo is queried every ~5 days with a **7-day search window**, so no posting
-> is missed and the dedupe layer drops anything seen before. To change the
-> daily budget, set a repository **variable** (not secret) named
-> `MAX_API_CALLS` (Settings → Secrets and variables → Actions → Variables).
+> ✅ **Free-tier quota — enforced automatically.** The free JSearch plan allows
+> **200 requests per billing cycle** (the cycle resets on your subscription
+> date, not the 1st of the month). Before each run the radar reads the live
+> `X-RateLimit-Requests-*` headers and rations what is left across the days
+> until reset, keeping a small reserve for manual runs — so it can never
+> overspend the free tier. A healthy quota funds the full 6 calls/day; a
+> depleted one automatically scales the run down, or skips JSearch entirely
+> and leans on Naukri. Set the repository **variable** `MAX_API_CALLS` to
+> override the ceiling manually.
 
 ### 2. Get the Apify token (for the Naukri source)
 

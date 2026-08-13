@@ -16,6 +16,7 @@ Env vars:
 
 from __future__ import annotations
 
+import math
 import hashlib
 import json
 import logging
@@ -82,12 +83,36 @@ LOCATIONS = ["Pune", "Hyderabad", "Bangalore", "Remote India"]
 # Seconds to sleep between JSearch calls (free-tier friendliness).
 API_SLEEP_SECONDS = 1.5
 
-# JSearch free tier allows ~200 requests/month. 6 calls/day = ~180/month.
-# Each run works through the next DAILY_BUDGET combos of the ROLES x
-# LOCATIONS matrix (28 total), so every combo is queried every ~5 days;
-# the 7-day search window below means no posting is missed in between.
+# Ceiling on JSearch calls per run. Each run works through the next
+# DAILY_BUDGET combos of the ROLES x LOCATIONS matrix, so every combo is
+# queried within the search window below and no posting is missed in
+# between. The effective budget is whatever the live quota affords (see
+# plan_budget), so this is an upper bound, not a guaranteed spend.
 DAILY_BUDGET = 6
 SEARCH_WINDOW = "week"
+
+# Transient JSearch failures (read timeouts) used to burn a combo's turn
+# in the rotation, skipping it for a full cycle. Retry instead.
+RETRY_ATTEMPTS = 3
+RETRY_BACKOFF_SECONDS = 5
+REQUEST_TIMEOUT = 60
+STUCK_RUNS_BEFORE_SKIP = 3
+
+# If a run yields fewer than this many new jobs, spend extra queries on
+# the next combos — but only out of genuine quota surplus.
+MIN_NEW_PER_RUN = 8
+TOPUP_MAX_CALLS = 4
+
+# The JSearch free plan allows 200 requests per billing cycle, and the
+# cycle resets on the subscription date rather than the 1st of the month.
+# Requests are budgeted from the live rate-limit headers so the radar can
+# never overspend the free tier: calls are rationed across the days left
+# until reset, keeping a small reserve for manual runs.
+QUOTA_RESERVE = 12
+
+# Latest rate-limit state seen from RapidAPI (persisted in the meta table
+# between runs so the budget survives process restarts).
+_QUOTA: dict[str, str | None] = {"remaining": None, "limit": None, "reset": None}
 # Until every combo has been swept once, look a month back so still-open
 # older postings are captured on the first pass through the rotation.
 BOOTSTRAP_WINDOW = "month"
@@ -236,26 +261,99 @@ def todays_combos(conn: sqlite3.Connection, budget: int) -> list[tuple[str, str]
     return picked
 
 
-def fetch_jobs(api_key: str, conn: sqlite3.Connection) -> list[dict]:
-    """Query JSearch for today's slice of the role x location rotation."""
-    headers = {
-        "X-RapidAPI-Key": api_key,
-        "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
-    }
-    budget = int(os.environ.get("MAX_API_CALLS") or DAILY_BUDGET)
-    combos = todays_combos(conn, budget)
-    total = len(ROLES) * len(LOCATIONS)
-    cursor = int(get_meta(conn, "fetch_cursor", "0")) % total
-    lifetime = int(get_meta(conn, "total_fetches", "0"))
-    window = BOOTSTRAP_WINDOW if lifetime < total else SEARCH_WINDOW
-    log.info("Rotation: combos %d-%d of %d (budget %d/day, window: %s)",
-             cursor + 1, cursor + len(combos), total, budget, window)
+def days_until_reset(reset_seconds: float | None) -> int:
+    """Whole days left in the billing cycle, at least 1."""
+    if not reset_seconds or reset_seconds <= 0:
+        return 1
+    return max(1, math.ceil(reset_seconds / 86400))
 
-    raw: list[dict] = []
-    attempted = 0
-    for role, location in combos:
-        query = f"{role} in {location}"
-        attempted += 1
+
+def affordable_calls(remaining: int | None, reset_seconds: float | None) -> int:
+    """Calls this run may spend without starving the rest of the cycle."""
+    if remaining is None:
+        return DAILY_BUDGET  # no quota data yet (first run)
+    spendable = remaining - QUOTA_RESERVE
+    if spendable <= 0:
+        return 0
+    return max(0, min(DAILY_BUDGET, spendable // days_until_reset(reset_seconds)))
+
+
+def load_quota(conn: sqlite3.Connection) -> tuple[int | None, float | None]:
+    """Quota state persisted by the previous run, aged to right now."""
+    raw = get_meta(conn, "quota_remaining")
+    if raw is None:
+        return None, None
+    try:
+        remaining = int(raw)
+        reset_at = float(get_meta(conn, "quota_reset_at", "0") or 0)
+    except ValueError:
+        return None, None
+    left = reset_at - time.time()
+    if left <= 0:
+        return None, None  # cycle rolled over; treat quota as refreshed
+    return remaining, left
+
+
+def save_quota(conn: sqlite3.Connection) -> None:
+    if _QUOTA["remaining"] is None:
+        return
+    set_meta(conn, "quota_remaining", str(_QUOTA["remaining"]))
+    if _QUOTA["reset"]:
+        set_meta(conn, "quota_reset_at", str(time.time() + float(_QUOTA["reset"])))
+
+
+def plan_budget(conn: sqlite3.Connection) -> int:
+    """How many JSearch queries this run can afford."""
+    override = os.environ.get("MAX_API_CALLS")
+    if override:
+        return int(override)
+    remaining, reset_left = load_quota(conn)
+    budget = affordable_calls(remaining, reset_left)
+    if remaining is not None:
+        log.info(
+            "JSearch quota: %d left, resets in %.1f days -> budget %d this run",
+            remaining, (reset_left or 0) / 86400, budget,
+        )
+    return budget
+
+
+def topup_budget(new_count: int, conn: sqlite3.Connection) -> int:
+    """Extra queries affordable out of genuine surplus after a thin run."""
+    if new_count >= MIN_NEW_PER_RUN:
+        return 0
+    remaining, reset_left = load_quota(conn)
+    if remaining is None:
+        return 0
+    spendable = remaining - QUOTA_RESERVE
+    if spendable <= 0:
+        return 0
+    surplus = spendable // days_until_reset(reset_left) - DAILY_BUDGET
+    return max(0, min(TOPUP_MAX_CALLS, surplus))
+
+
+def quota_note() -> str:
+    if _QUOTA["remaining"] is None:
+        return ""
+    limit = f"/{_QUOTA['limit']}" if _QUOTA["limit"] else ""
+    return f" (JSearch quota left: {_QUOTA['remaining']}{limit})"
+
+
+def _read_quota_headers(resp: requests.Response) -> None:
+    remaining = resp.headers.get("x-ratelimit-requests-remaining")
+    if remaining is not None:
+        _QUOTA["remaining"] = remaining
+        _QUOTA["limit"] = resp.headers.get("x-ratelimit-requests-limit")
+        _QUOTA["reset"] = resp.headers.get("x-ratelimit-requests-reset")
+
+
+def _jsearch_query(headers: dict, query: str, window: str) -> tuple[list[dict], bool]:
+    """Run one JSearch query, retrying transient network failures.
+
+    Returns (results, answered) where answered is True only if the API
+    actually responded — a combo that never answered is left in the
+    rotation to be retried on the next run rather than silently skipped.
+    """
+    for attempt in range(1, RETRY_ATTEMPTS + 1):
         try:
             resp = requests.get(
                 JSEARCH_URL,
@@ -266,26 +364,95 @@ def fetch_jobs(api_key: str, conn: sqlite3.Connection) -> list[dict]:
                     "date_posted": window,
                     "country": "in",
                 },
-                timeout=30,
+                timeout=REQUEST_TIMEOUT,
             )
+            _read_quota_headers(resp)
             if resp.status_code == 429:
-                log.warning("Rate limited on %r; stopping fetch", query)
-                break
+                log.warning(
+                    "JSearch quota exhausted (%s left of %s); skipping the "
+                    "rest of this run — Naukri still supplies fresh jobs",
+                    _QUOTA["remaining"], _QUOTA["limit"],
+                )
+                return [], False
             resp.raise_for_status()
             data = resp.json().get("data") or {}
             # v5 wraps results as {"jobs": [...], "cursor": ...}; tolerate the
             # old flat-list shape too.
             results = data.get("jobs", []) if isinstance(data, dict) else data
             log.info("%-45s -> %d results", query, len(results))
-            raw.extend(results)
+            return results, True
         except requests.RequestException as exc:
-            log.warning("Fetch failed for %r: %s", query, exc)
+            if attempt < RETRY_ATTEMPTS:
+                backoff = RETRY_BACKOFF_SECONDS * attempt
+                log.warning(
+                    "Fetch failed for %r (attempt %d/%d): %s — retrying in %.0fs",
+                    query, attempt, RETRY_ATTEMPTS, exc, backoff,
+                )
+                time.sleep(backoff)
+            else:
+                log.warning(
+                    "Fetch failed for %r after %d attempts: %s — combo stays "
+                    "in the rotation for the next run",
+                    query, RETRY_ATTEMPTS, exc,
+                )
+    return [], False
+
+
+def fetch_jobs(
+    api_key: str, conn: sqlite3.Connection, budget: int | None = None
+) -> list[dict]:
+    """Query JSearch for the next slice of the role x location rotation."""
+    headers = {
+        "X-RapidAPI-Key": api_key,
+        "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
+    }
+    if budget is None:
+        budget = plan_budget(conn)
+    if budget <= 0:
+        log.warning(
+            "JSearch budget is 0 for this run (quota nearly spent); "
+            "relying on Naukri for fresh jobs%s", quota_note(),
+        )
+        return []
+    combos = todays_combos(conn, budget)
+    total = len(ROLES) * len(LOCATIONS)
+    cursor = int(get_meta(conn, "fetch_cursor", "0")) % total
+    lifetime = int(get_meta(conn, "total_fetches", "0"))
+    window = BOOTSTRAP_WINDOW if lifetime < total else SEARCH_WINDOW
+    log.info("Rotation: combos %d-%d of %d (budget %d, window: %s)",
+             cursor + 1, cursor + len(combos), total, budget, window)
+
+    raw: list[dict] = []
+    answered = 0
+    for role, location in combos:
+        results, ok = _jsearch_query(headers, f"{role} in {location}", window)
+        if not ok:
+            break
+        answered += 1
+        raw.extend(results)
         time.sleep(API_SLEEP_SECONDS)
 
-    # Advance past every combo we attempted (even failed ones) so a bad
-    # query can't wedge the rotation.
-    set_meta(conn, "fetch_cursor", str((cursor + max(attempted, 1)) % total))
-    set_meta(conn, "total_fetches", str(lifetime + attempted))
+    if answered < len(combos):
+        log.warning(
+            "Only %d/%d combos answered; the rest stay queued for next run",
+            answered, len(combos),
+        )
+    # Advance only past combos the API actually answered, so a timeout no
+    # longer costs a combo its turn. A run where nothing answers would
+    # otherwise wedge the rotation, so force progress after repeated
+    # total failures.
+    if answered == 0:
+        stuck = int(get_meta(conn, "stuck_runs", "0")) + 1
+        set_meta(conn, "stuck_runs", str(stuck))
+        if stuck >= STUCK_RUNS_BEFORE_SKIP:
+            log.warning("Rotation stuck for %d runs; skipping one combo", stuck)
+            set_meta(conn, "fetch_cursor", str((cursor + 1) % total))
+            set_meta(conn, "stuck_runs", "0")
+    else:
+        set_meta(conn, "stuck_runs", "0")
+        set_meta(conn, "fetch_cursor", str((cursor + answered) % total))
+        set_meta(conn, "total_fetches", str(lifetime + answered))
+    save_quota(conn)
     return raw
 
 
@@ -349,6 +516,7 @@ NAUKRI_QUERIES = [
     "kubernetes engineer",
 ]
 NAUKRI_MAX_RESULTS = 60
+NAUKRI_FRESHNESS_DAYS = 3
 
 _TARGET_LOCATION_RE = re.compile(
     r"pune|hyderabad|bangalore|bengaluru|remote|work from home|hybrid", re.I
@@ -360,7 +528,11 @@ def fetch_naukri(apify_token: str) -> list[dict]:
     payload = {
         "searchQueries": NAUKRI_QUERIES,
         "experience": "0-8",
-        "freshness": 7,
+        # A 7-day window returned the same top listings every day, so most
+        # of the quota was spent re-fetching jobs already in the database.
+        # 3 days keeps the results genuinely fresh while still tolerating
+        # a couple of missed runs.
+        "freshness": NAUKRI_FRESHNESS_DAYS,
         "sortBy": "date",
         "maxResults": int(os.environ.get("MAX_NAUKRI_RESULTS") or NAUKRI_MAX_RESULTS),
         "compact": True,
@@ -608,7 +780,7 @@ def insert_new_jobs(conn: sqlite3.Connection, jobs: list[dict]) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 
-def export_json(conn: sqlite3.Connection) -> int:
+def export_json(conn: sqlite3.Connection, new_count: int | None = None) -> int:
     rows = conn.execute("SELECT * FROM jobs ORDER BY created_at DESC, score DESC").fetchall()
     jobs = []
     for r in rows:
@@ -617,6 +789,8 @@ def export_json(conn: sqlite3.Connection) -> int:
         jobs.append(job)
     payload = {
         "last_run": datetime.now(timezone.utc).isoformat(),
+        # Lets the dashboard warn when a run brought nothing new.
+        "last_run_new": new_count,
         "total": len(jobs),
         "jobs": jobs,
     }
@@ -657,12 +831,41 @@ def main() -> int:
     else:
         log.info("APIFY_TOKEN not set; skipping Naukri fetch")
 
+    inserted: list[dict] = []
     if normalized:
         inserted = insert_new_jobs(conn, normalized)
         log.info("Inserted %d new jobs (deduped from %d)", len(inserted), len(normalized))
 
+    # A thin day (API outage, an empty slice of the rotation) should not
+    # leave the dashboard without fresh postings — spend spare quota on
+    # the next combos when there is room to do so.
+    if api_key and len(inserted) < MIN_NEW_PER_RUN:
+        extra = topup_budget(len(inserted), conn)
+        if extra:
+            log.info("Only %d new jobs; topping up with %d extra queries",
+                     len(inserted), extra)
+            topup_raw = fetch_jobs(api_key, conn, budget=extra)
+            topup_norm = []
+            for item in topup_raw:
+                job = normalize(item)
+                if job and job["url"] not in seen_urls:
+                    seen_urls.add(job["url"])
+                    topup_norm.append(job)
+            if topup_norm:
+                added = insert_new_jobs(conn, topup_norm)
+                inserted.extend(added)
+                log.info("Top-up added %d new jobs", len(added))
+
+    log.info("Run total: %d new jobs%s", len(inserted), quota_note())
+    if not inserted:
+        log.warning(
+            "NO NEW JOBS this run — check the warnings above (API outage, "
+            "exhausted quota, or a genuinely quiet day)"
+        )
+    set_meta(conn, "last_run_new", str(len(inserted)))
+
     backfill_naukri_experience(conn)
-    total = export_json(conn)
+    total = export_json(conn, new_count=len(inserted))
     log.info("Exported %d jobs to %s", total, JSON_PATH)
     conn.close()
     return 0
