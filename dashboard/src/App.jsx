@@ -52,6 +52,25 @@ const AGE_OPTIONS = [
   { value: 30, label: "Last 30 days" },
 ];
 
+const SORT_OPTIONS = [
+  { id: "newest", label: "Newest first" },
+  { id: "score", label: "Best match first" },
+];
+
+function postedTime(job) {
+  const t = new Date(job.posted_at || "").getTime();
+  return Number.isNaN(t) ? 0 : t;
+}
+
+function compareJobs(a, b, sortBy) {
+  // Ties fall back to the other dimension so ordering stays stable and
+  // meaningful (same-day posts rank by score, equal scores by recency).
+  if (sortBy === "newest") {
+    return postedTime(b) - postedTime(a) || b.score - a.score;
+  }
+  return b.score - a.score || postedTime(b) - postedTime(a);
+}
+
 function postedDaysAgo(job) {
   const t = new Date(job.posted_at || "").getTime();
   if (Number.isNaN(t)) return null;
@@ -248,6 +267,7 @@ export default function App() {
   const [locationPill, setLocationPill] = useState(null);
   const [expFilter, setExpFilter] = useState(null);
   const [maxAge, setMaxAge] = useState(null);
+  const [sortBy, setSortBy] = useState("newest");
   const [companyFilter, setCompanyFilter] = useState("");
   const [overrides, setOverrides] = useState(loadOverrides);
   const [dark, setDark] = useState(() =>
@@ -295,8 +315,8 @@ export default function App() {
       ...j,
       effectiveStatus: overrides[j.id]?.status || null,
     }));
-    return list.sort((a, b) => b.score - a.score);
-  }, [data, overrides]);
+    return list.sort((a, b) => compareJobs(a, b, sortBy));
+  }, [data, overrides, sortBy]);
 
   const trackedCount = useMemo(
     () =>
@@ -575,6 +595,18 @@ export default function App() {
           {AGE_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
+          title="Order the job list"
+        >
+          {SORT_OPTIONS.map((o) => (
+            <option key={o.id} value={o.id}>
+              Sort: {o.label}
             </option>
           ))}
         </select>

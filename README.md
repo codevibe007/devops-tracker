@@ -128,6 +128,10 @@ npm run dev                     # auto-copies ../data/jobs.json into public/
   recalculate per selected tab.
 - Location filter pills (Pune / Hyderabad / Bangalore / Remote) with counts,
   combined with the active cloud tab.
+- Filter dropdowns for **posted age** (any time / last 7 / 15 / 30 days)
+  and **company** (alphabetical, with counts), plus a **sort** dropdown:
+  *Newest first* (default) or *Best match first*. All filters and the sort
+  combine; each control's counts reflect the other active filters.
 - Job cards with skill tags and a match-score badge (green ≥ 8, amber 6–8,
   dimmed < 6), plus **Apply / Mark applied / Ignore** buttons.
 - **Application pipeline tracking** — every job card has stage chips
