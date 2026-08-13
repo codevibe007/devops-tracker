@@ -1,5 +1,6 @@
 {
-  "last_run": "2026-08-13T12:48:51.225731+00:00",
+  "last_run": "2026-08-13T18:38:09.696190+00:00",
+  "last_run_new": 0,
   "total": 1324,
   "jobs": [
     {
@@ -4426,7 +4427,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "0-0 yrs",
+      "experience": "",
       "status": "new",
       "created_at": "2026-08-09T05:33:37.736298+00:00"
     },
@@ -4443,7 +4444,7 @@
       "skills": [
         "Grafana"
       ],
-      "experience": "0-0 yrs",
+      "experience": "",
       "status": "new",
       "created_at": "2026-08-08T05:15:56.480332+00:00"
     },
@@ -8091,7 +8092,7 @@
       "score": 0.0,
       "cloud_tags": "none",
       "skills": [],
-      "experience": "0-0 yrs",
+      "experience": "",
       "status": "new",
       "created_at": "2026-08-03T13:27:55.682972+00:00"
     },
@@ -21279,7 +21280,7 @@
         "Python",
         "CI/CD"
       ],
-      "experience": "0-0 yrs",
+      "experience": "",
       "status": "new",
       "created_at": "2026-07-20T04:19:35.916237+00:00"
     },
@@ -23483,7 +23484,7 @@
       "skills": [
         "Grafana"
       ],
-      "experience": "0-0 yrs",
+      "experience": "",
       "status": "new",
       "created_at": "2026-07-19T15:20:08.781649+00:00"
     },
