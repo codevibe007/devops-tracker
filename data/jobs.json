@@ -1,8 +1,42 @@
 {
-  "last_run": "2026-08-17T04:27:24.596315+00:00",
-  "last_run_new": 0,
-  "total": 1325,
+  "last_run": "2026-08-18T04:20:32.850808+00:00",
+  "last_run_new": 2,
+  "total": 1327,
   "jobs": [
+    {
+      "id": "nk-120526502476",
+      "title": "Software Engineer, Platform - Bangalore, India",
+      "company": "Speechify",
+      "location": "Bengaluru",
+      "url": "https://www.naukri.com/job-listings-software-engineer-platform-bangalore-india-speechify-bengaluru-0-to-1-years-120526502476",
+      "source": "Naukri",
+      "posted_at": "2026-05-12T12:23:37+00:00",
+      "score": 3.0,
+      "cloud_tags": "gcp",
+      "skills": [
+        "GCP"
+      ],
+      "experience": "0-1 yrs",
+      "status": "new",
+      "created_at": "2026-08-18T04:20:32.330422+00:00"
+    },
+    {
+      "id": "nk-010526501740",
+      "title": "Software Engineer, Platform",
+      "company": "Speechify",
+      "location": "Pune",
+      "url": "https://www.naukri.com/job-listings-software-engineer-platform-speechify-pune-0-to-1-years-010526501740",
+      "source": "Naukri",
+      "posted_at": "2026-05-01T10:44:22+00:00",
+      "score": 3.0,
+      "cloud_tags": "gcp",
+      "skills": [
+        "GCP"
+      ],
+      "experience": "0-1 yrs",
+      "status": "new",
+      "created_at": "2026-08-18T04:20:32.330422+00:00"
+    },
     {
       "id": "nk-140826022222",
       "title": "Devops Engineer",
