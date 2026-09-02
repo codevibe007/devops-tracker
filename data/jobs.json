@@ -1,8 +1,216 @@
 {
-  "last_run": "2026-09-01T07:55:20.300318+00:00",
-  "last_run_new": 15,
-  "total": 1813,
+  "last_run": "2026-09-02T07:12:32.959262+00:00",
+  "last_run_new": 11,
+  "total": 1824,
   "jobs": [
+    {
+      "id": "ekV2bVFnTlEtOFFNMTRBYUFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBTbWxqYUdSa1QzQXpPV0ZXZWt0cllXNUVZbTVMV0RoQ1RUZFdNbFJuYUZoSWNWSnlaMkpXVkhOelZVVk9ja3MxV0dsVVFqTldTMjR3TlU4ek5FbERjV1JMWjJkb1JubElZVmQzVWtOUlRVTlJha2c1UjNCWVoyeHpOalJSYjNOQmNpMWFYMU53YmxSVFYybzVOV1EyVUVGa1RrODNkMXBHT0RKUlVYTnNRbXc0WDJ0MGNsb1NGMVZqZVZoaGNVZHZSbkpoTlcxMGExQnROWFYyY1ZGSkdpSkJSSE55T1daVFltOVNRVEZ1T1dkSVVuVkVUSGx0Y0doVlJXeHdRMXBJVlhWUg",
+      "title": "Google Cloud Platform (GCP) Engineer",
+      "company": "GUHATEK CONSULTING SERVICES PRIVATE LIMITED",
+      "location": "Chennai, Tamil Nadu",
+      "url": "https://www.glassdoor.co.in/job-listing/google-cloud-platform-gcp-engineer-guhatek-consulting-services-private-limited-JV_KO0,34_KE35,78.htm?jl=1010221783845",
+      "source": "Glassdoor",
+      "posted_at": "2026-08-05T00:00:00.000Z",
+      "score": 9.0,
+      "cloud_tags": "gcp,aws,azure",
+      "skills": [
+        "GCP",
+        "AWS",
+        "Azure",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "GitHub Actions",
+        "Jenkins"
+      ],
+      "experience": "3-6 yrs",
+      "status": "new",
+      "created_at": "2026-09-02T07:12:31.186340+00:00"
+    },
+    {
+      "id": "RWxrRmdDZEh5M19RUUxnWUFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBTakpvU0VKNFNtVjJjblp3YmxSTlgzVkdWM2RsWjJFMlQzQXdibEphVkdSd1dsOUhjbFZVWkVaTGMyb3RPR2xPVEZGM1RHOW9UMFJmVGxkS2JIQXpNM2RmT0UxVFMyWkxWSEJwTm13Mk9GZEpWbVI1U0ZoblMxQjRaRk5ZVkdGRlExVkhla3N4YW1GaWFsYzJTemhLTjFCRFUycGhUWGhPZGkxSU9FbGtaa041ZUhCNlJuUVNGMVZqZVZoaGNVZHZSbkpoTlcxMGExQnROWFYyY1ZGSkdpSkJSSE55T1daVVpYZFhNemRFWXpCS1YzTlpVRVZZVTA0Mk1XNWZNRzk0ZFZaMw",
+      "title": "Senior Associate - GCP Data Engineer",
+      "company": "Equinix",
+      "location": "Bengaluru, Karnataka",
+      "url": "https://careers.equinix.com/pl/jobs/senior-associate-gcp-data-engineer-bengaluru-karnataka-india-d00598d4-9eab-446f-9a81-2cd48b2e7258",
+      "source": "Equinix Careers",
+      "posted_at": "2026-09-02T07:12:22.215873+00:00",
+      "score": 8.0,
+      "cloud_tags": "gcp",
+      "skills": [
+        "GCP",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "Python",
+        "CI/CD"
+      ],
+      "experience": "2+ yrs",
+      "status": "new",
+      "created_at": "2026-09-02T07:12:31.186340+00:00"
+    },
+    {
+      "id": "OXRKblo0LU41QzFrb2Z2RUFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBTVVF6VFVsUFpFOUtUbU13Y1ZKRWRYcHlNRjgxYVc4NVUzRnlOelJQV1VaaWRVbDZNR3REWDJadldIaHBTa1puVm05SFJYQnNPVGgyVVZSak5HTlNWMUp5VUdsbFptZFVOa2s1U0RWTmIxOVVhM0JEVEhSU01UQmpNVFJzWTBGSlJVaEZUbVZEWXkwdFkzQmtObGRqVURSSGJGaE9lRmhTTlVsSVoyUmhXVEJaTmtSVGJHOFNGMVZqZVZoaGNVZHZSbkpoTlcxMGExQnROWFYyY1ZGSkdpSkJSSE55T1daVVF5MVlObGhSTlhWRE0wRndNalJNVjNCR1ZYUk5TRTE2T1VaQg",
+      "title": "Solution Architect - GCP Cloud",
+      "company": "Ingram Micro",
+      "location": "Mumbai, Maharashtra",
+      "url": "https://careers.ingrammicro.com/fr/nos-offres/r-113146/solution-architect-gcp-cloud/",
+      "source": "Ingram Micro",
+      "posted_at": "2026-09-02T07:12:22.222277+00:00",
+      "score": 7.5,
+      "cloud_tags": "gcp",
+      "skills": [
+        "GCP",
+        "Terraform",
+        "Kubernetes",
+        "Docker",
+        "Prometheus",
+        "Grafana",
+        "CI/CD"
+      ],
+      "experience": "8-10 yrs",
+      "status": "new",
+      "created_at": "2026-09-02T07:12:31.186340+00:00"
+    },
+    {
+      "id": "S3pZMU9ZR2wzdW1NRUNsZEFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBURUZDVUd4RWRXMU1lR1ZzUzNRdFkwTmFkRFowTTJGSmRIazJiMGcwUm5WNmRtRjBkVWN0TlcxWmEzbE1jVzl0T1hGdVlUaGxaVXRuWmkxb1ltSnRWM3BDUWtKcFIyTnZXRVEwV1ZZM1ZsbHlaRk5PV2tSTmRrNXJWbWhuUlU5TGRVaEdabmhEVmxwS1ZreExUMG96YTE5b1h5MTVORTlNZUZaWVRIUnphM0I1ZWpWMWRFWVNGMVZqZVZoaGNVZHZSbkpoTlcxMGExQnROWFYyY1ZGSkdpSkJSSE55T1daVFdXNXRWR0ZVUVRWWmMyTTBVR3AzV0ZsWFFXTm1TalpzZVMxbg",
+      "title": "Solutions Architect - Presales (GCP)",
+      "company": "Ingram Micro",
+      "location": "Bengaluru, Karnataka",
+      "url": "https://careers.ingrammicro.com/en/jobs/r-114143/solutions-architect-presales-gcp/",
+      "source": "Ingram Micro",
+      "posted_at": "2026-09-02T07:12:22.219523+00:00",
+      "score": 6.0,
+      "cloud_tags": "gcp",
+      "skills": [
+        "GCP",
+        "Terraform",
+        "Prometheus",
+        "Grafana",
+        "CI/CD"
+      ],
+      "experience": "4-5 yrs",
+      "status": "new",
+      "created_at": "2026-09-02T07:12:31.186340+00:00"
+    },
+    {
+      "id": "NjY0ZVFVZUd5b3NhNFFhcUFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBTVlZpTkdNNWVHVXRaVzloTW1JeFNtSXpZVTlMVmtwdVUzWllTRlUwYkdsdGRtbE9NVTFLWnpOWVpEaENWMlJRUW1FeFpFd3dibmxyTFZWWk5YSlNabkpGU1hSbmVuTlZZWEpYTlhKMllXeDBaVWMwVkVsWFEzRk9NM05GVUVGMWJuRjJkRUl3V2tKcFRsRkpZV0pHVVVSdGRVbElkVUZxY0V4a1NFTm5la1ZKYm5ScVEyTVNGMVZqZVZoaGNVZHZSbkpoTlcxMGExQnROWFYyY1ZGSkdpSkJSSE55T1daVVMwRTFVSE0wYVhBd1ZITkVkbTB0VFhsbGNtaE9SVlpXV2s5Mw",
+      "title": "Manager | GCP Data Engineer | Ahmedabad | Engineering | Data Modernization & Migration",
+      "company": "deloitte",
+      "location": "Ahmedabad, Gujarat",
+      "url": "https://southasiacareers.deloitte.com/job/Ahmedabad-Manager-GCP-Data-Engineer-Ahmedabad-Engineering-Data-Modernization-&-Migration/58739944/",
+      "source": "Deloitte South Asia Careers",
+      "posted_at": "2026-08-11T00:00:00.000Z",
+      "score": 4.5,
+      "cloud_tags": "gcp",
+      "skills": [
+        "GCP",
+        "Python"
+      ],
+      "experience": "8-15 yrs",
+      "status": "new",
+      "created_at": "2026-09-02T07:12:31.186340+00:00"
+    },
+    {
+      "id": "MXV4LTBkOXBsSjNYOWlqbUFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBTbXRSYUhKSFJWQm5SSE5CYW1Kd2QyaEVSWHBGWXpoYWNGcHBWa3B1YW04dFRGTm5MV3R4VVcxUE0wRXhibTU2ZGpKc1pYZGxSbmh0YzFaVlNqWjFhMXBmUldOSFRFWTRaMHhmWmxJM1VHUmFkVlk1UzBKVE9HODJObUZMVjE5aE1tdHpkVFZ0ZUd0cGVsWkVNVmN4WDFkbVVrVmtWREZRVGxWR1QwVjZaVkowVmpkZllrZ1NGMVZqZVZoaGNVZHZSbkpoTlcxMGExQnROWFYyY1ZGSkdpSkJSSE55T1daVFVFZFdWbGxJT0VRd2JuWk5hWEpMZW1KZmRVNUhSVXcyYm1Wbg",
+      "title": "GCP, BigQuery, Python",
+      "company": "Cognizant",
+      "location": "Chennai, Tamil Nadu",
+      "url": "https://careers.cognizant.com/apj-en/jobs/00069400301/gcp-bigquery-python/",
+      "source": "Cognizant Careers",
+      "posted_at": "2026-08-12T00:00:00.000Z",
+      "score": 4.5,
+      "cloud_tags": "gcp",
+      "skills": [
+        "GCP",
+        "Python"
+      ],
+      "experience": "6-8 yrs",
+      "status": "new",
+      "created_at": "2026-09-02T07:12:31.186340+00:00"
+    },
+    {
+      "id": "MmhjOVVkYVI1VlRwbXNWdEFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBURlZmZEVJM09VWjRUMHRFU1UxNE1rbEpSazh6ZEhaRE9HSmFSMFprT0ZveVlrcEZiRlJzVTBseFpXUjJOMnR5UVRod1ZGZzVYMWh0T1UwelJqRnFUSEUwVW5jeVRWRjFZamhGUlc5MFNESkZXbTlhVlRKMlNEVlJVa3hMYURRMlNsZFlSMnhTY0Y4d09ITk9hWFJNZWpaaGVVMXNVa1Z5TUZaSlRFeHlWWFZ5TFhOTUxVc1NGMVZqZVZoaGNVZHZSbkpoTlcxMGExQnROWFYyY1ZGSkdpSkJSSE55T1daUlZFazFYM1YwTWsxM01qUXRabUZHYUVJNVJsaDRTbEZFVEZObg",
+      "title": "Senior Software Engineer (Python/ PySprak/ GCP)",
+      "company": "Wells Fargo",
+      "location": "Hyderabad, Telangana",
+      "url": "https://www.wellsfargojobs.com/fr-ca/jobs/r-567282/senior-software-engineer-python-pysprak-gcp/",
+      "source": "Wells Fargo",
+      "posted_at": "2026-08-17T00:00:00.000Z",
+      "score": 4.5,
+      "cloud_tags": "gcp",
+      "skills": [
+        "GCP",
+        "Python"
+      ],
+      "experience": "4+ yrs",
+      "status": "new",
+      "created_at": "2026-09-02T07:12:31.186340+00:00"
+    },
+    {
+      "id": "b29FTG5BWWFGSzR2STlscUFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBTVlpHYjNoSE1TMUhXbmhQWDNkWFFWWk1hRFJNWmpWMFUxRlJTeTFHWkZsc05IcHVjVFJmZGtGNU1HdHlWVVpMVG1weGJ6ZFZiRlJwY2xGaFlYTkVZbmhsUTBWWk5HRjNja3h3WDNwRFdHOURNbFZ4UkVSNGJEQTFiRlZ1TkVKSE9HbFVUUzFJTFRSc2FuRTNabGd5UjNGa2VqTlBaR1pWVmtKS1MybGlNbHBEVGt4SU5GQVNGMVZqZVZoaGNVZHZSbkpoTlcxMGExQnROWFYyY1ZGSkdpSkJSSE55T1daVFJYUndZMGRETldWUWN6RjVTemQyU2s4ME0wOVpkV1JYYVhGUg",
+      "title": "GCP Developer",
+      "company": "Cyntexa",
+      "location": "Jaipur, Rajasthan",
+      "url": "https://cyntexa.com/careers/gcp-developer/",
+      "source": "Cyntexa",
+      "posted_at": "2026-09-02T07:12:22.215552+00:00",
+      "score": 3.0,
+      "cloud_tags": "gcp",
+      "skills": [
+        "GCP"
+      ],
+      "experience": "",
+      "status": "new",
+      "created_at": "2026-09-02T07:12:31.186340+00:00"
+    },
+    {
+      "id": "dFcyb3lOVVNFOFNhQ3FsUEFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBUR0ZTVmxkd1VsRlVOV3BoU3pGSGJsUldMVWhVYzBoTVdUQXlSVkZ1TFRGUUxURmhUVmxEWDFwRlFrcFBTVVJWVDBGaGQwWTNhVloyYVhOYVNtMWZlVkZJTm5Ga1MwUjNYMmN6ZW5KRE9VczNPRWhxUjNaWWJtSnJhWFJzVWw4NGVrTklPR0l4U1RNdFVUSkhjR3hzVlZsV2NHeFlPV2xDVm1KaFRIQTFjbGczZG5OUlUyUVNGMVZqZVZoaGNVZHZSbkpoTlcxMGExQnROWFYyY1ZGSkdpSkJSSE55T1daU1gzZzFjVWxxU25sbU0ycE1jbk41V0MxaVpGWTBUWEpwUTB4Qg",
+      "title": "GCP",
+      "company": "Virtusa",
+      "location": "Bengaluru, Karnataka",
+      "url": "https://www.virtusa.com/careers/job-search/global/en/job/VIRVIRGLOBALCREQ218047EXTERNALENGLOBAL/GCP",
+      "source": "Virtusa",
+      "posted_at": "2026-08-19T00:00:00.000Z",
+      "score": 1.0,
+      "cloud_tags": "gcp",
+      "skills": [
+        "GCP"
+      ],
+      "experience": "12+ yrs",
+      "status": "new",
+      "created_at": "2026-09-02T07:12:31.186340+00:00"
+    },
+    {
+      "id": "nk-010926505832",
+      "title": "Software Engineer I - Salesforce",
+      "company": "Insentapp",
+      "location": "Bengaluru",
+      "url": "https://www.naukri.com/job-listings-software-engineer-i-salesforce-zoom-info-bengaluru-0-to-2-years-010926505832",
+      "source": "Naukri",
+      "posted_at": "2026-09-01T11:24:44+00:00",
+      "score": 0.0,
+      "cloud_tags": "none",
+      "skills": [],
+      "experience": "0-2 yrs",
+      "status": "new",
+      "created_at": "2026-09-02T07:12:31.186340+00:00"
+    },
+    {
+      "id": "nk-310826020679",
+      "title": "IT Network Engineer | IT Software engineer",
+      "company": "Cloud Path Infotech",
+      "location": "Vijayawada, Visakhapatnam, Hyderabad",
+      "url": "https://www.naukri.com/job-listings-it-network-engineer-it-software-engineer-cloud-path-infotech-vijayawada-visakhapatnam-hyderabad-0-to-1-years-310826020679",
+      "source": "Naukri",
+      "posted_at": "2026-08-31T11:51:50.481000+00:00",
+      "score": 0.0,
+      "cloud_tags": "none",
+      "skills": [],
+      "experience": "0-1 yrs",
+      "status": "new",
+      "created_at": "2026-09-02T07:12:31.186340+00:00"
+    },
     {
       "id": "amVtRGhNS1dpME1zN2wtTEFBQUFBQT09OkVzd0JDb3dCUVVwcFZEUjBTMnhuYVdsRlNGazVZazh6ZVhnNGIycGZSR2RUVVV0WmJqVnRNa3hpVjFOUWJWTXlWbVpKUW1WUU9VbHRYMkp2WjI0eFpGcDFOM05DUW5Wak5sWlpZekZhVTNjMVlURnNiV2R0U0hwdVZWQjZVbXRSZVVaV1RFOXdNbVkwWkROSFFVdHVaa3haVUdoTGJHWkNNRXh1UjBwRVgxVllTbmRGVld0UFFYSTRjM0YwTm1VemFFY1NGM2swVTFkaGNHSlpUSFl5TkhGMGMxQnhiM1puYlVGckdpSkJSSE55T1daU2NFaHhORlozT1cxZlprWktkRzgzUVMxTWRVZHRURlpGUjJOQg",
       "title": "DevOps Specialist Engineer \u2013 SRE, Cloud & Applied AI",
